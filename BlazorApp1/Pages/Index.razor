@@ -13,7 +13,7 @@ else
     <section class="masthead fw-block" style="margin-top: 82px;">
         <div class="container">
             <p>a statistics website to determine, once and for all who is the bigger club</p>
-            @team1Name @team2Name
+            <br/>
             <h1>
                 <select id="team1Select" @bind="team1Name">
                     @foreach (var team in Teams.Except(new[] { team2 }).ToList())
@@ -98,8 +98,8 @@ else
     }
 
     async Task LoadData() {
-            team1 = Teams.SingleOrDefault(x => x.MainName == team1Name);
-            team2 = Teams.SingleOrDefault(x => x.MainName == team2Name);
+        team1 = Teams.SingleOrDefault(x => x.MainName == team1Name);
+        team2 = Teams.SingleOrDefault(x => x.MainName == team2Name);
         div1 = await ForecastService.GetDivision(divisionNumber, team1, team2);
         head2head = await ForecastService.HeadToHead(team1, team2);
         faCup = await ForecastService.FaCup(team1, team2);

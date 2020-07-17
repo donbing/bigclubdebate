@@ -138,17 +138,17 @@ div.less {
     overflow: auto;
     left: 0px;
 }
-
-
-.masthead h1 select {
-    background-color: black;
-    color: white;
-    text-transform: uppercase;
-    border: black 1px solid;
+.masthead h1 select:first-child {
+    text-align-last: right;
 }
 .masthead h1 select {
-    background-color: black;
+    background-color: transparent;
     color: white;
     text-transform: uppercase;
-    border: black 1px solid;
+    border: none;
+    display: inline;
+}
+.masthead h1 {
+    width: auto;
+    display:inline;
 }
