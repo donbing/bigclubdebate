@@ -1,0 +1,34 @@
+﻿
+    <section class="stats-section fw-block" style="margin-bottom: 25px;">
+        <h2 class="year-bar fw-block">@SectionName</h2>
+        <div class="fw-block has-full-stats">
+            <div class="stats-block-wrap fw-block all-comps @MoreInfo">
+                @ChildContent
+            </div>
+            @if (Expandable)
+            {
+                <div class="moreInfoBar" @onclick="MoreClicked">
+                    <img height="40px" src="images/DownArrow.png" />
+                </div>
+            }
+        </div>
+    </section>
+
+@code {
+    [Parameter]
+    public bool Expandable { get; set; } = true;
+
+    [Parameter]
+    public string SectionName { get; set; }
+
+    [Parameter]
+    public RenderFragment ChildContent { get; set; }
+
+    public string moreInfo { get; set; } = "more";
+    public string MoreInfo => Expandable ? moreInfo : "";
+
+    async Task MoreClicked(MouseEventArgs e)
+    {
+        moreInfo = Expandable ? moreInfo == "more" ? "less" : "more" : "";
+    }
+}

@@ -1,0 +1,47 @@
+﻿
+@using ConsoleApp1
+
+<article class="stats-block container">
+    <h3 class="middle-text"></h3>
+    <h4>team1 Stats</h4>
+    <ul class="team1 stats">
+        <li class="apps">
+            <span class="num">@Team1.CleanSheets</span> <span class="type">c/sheets</span>
+        </li>
+        <li class="assists"><span class="num">@Team1.Conceded</span> <span class="type">conceded</span></li>
+        <li class="goals">
+            <span class="num">@Team1.Goals</span> <span class="type">goals</span>
+            <span class="plus full-stats-toggle"><i class="fa fa-plus"></i></span>
+            <ul class="extras">
+                <li><span>@Team1.AwayGoals</span> away</li>
+                <li><span>@Team1.GoalsInLast10Years</span> in 10 years</li>
+                <li><span>@Team1.MostGoalsInOneGame</span> most</li>
+            </ul>
+        </li>
+    </ul>
+
+    <h4>team2 Stats</h4>
+    <ul class="team2 stats">
+        <li class="goals">
+            <span class="num">@Team2.Goals</span> <span class="type">goals</span>
+            <span class="plus full-stats-toggle"><i class="fa fa-plus"></i></span>
+            <ul class="extras">
+                <li><span>@Team2.AwayGoals</span> away</li>
+                <li><span>@Team2.GoalsInLast10Years</span> in 10 years</li>
+                <li><span>@Team2.MostGoalsInOneGame</span> most</li>
+            </ul>
+        </li>
+        <li class="assists"><span class="num">@Team2.Conceded</span> <span class="type">conceded</span></li>
+        <li class="apps">
+            <span class="num">@Team2.CleanSheets</span> <span class="type">c/sheets</span>
+        </li>
+    </ul>
+</article>
+
+@code {
+    [Parameter]
+    public TeamStats Team1 { get; set; }
+
+    [Parameter]
+    public TeamStats Team2 { get; set; }
+}

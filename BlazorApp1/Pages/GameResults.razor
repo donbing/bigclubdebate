@@ -1,0 +1,54 @@
+﻿
+@using ConsoleApp1
+
+<article class="stats-block container">
+    <h3 class="middle-text"></h3>
+    <h4>team1 Stats</h4>
+    <ul class="team1 stats">
+        <li class="apps">
+            <span class="num">@Team1.Draws</span> <span class="type">draws</span>
+            <ul class="extras">
+                <li><span>@Team1.NoScoreDraws</span> no goals</li>
+                <li><span>@Team1.AwayDraws</span> away</li>
+            </ul>
+        </li>
+        <li class="assists"><span class="num">@Team1.Losses</span> <span class="type">losses</span></li>
+        <li class="goals">
+            <span class="num">@Team1.Wins</span> <span class="type">wins</span>
+            <span class="plus full-stats-toggle"><i class="fa fa-plus"></i></span>
+            <ul class="extras">
+                <li><span>@Team1.CleanWins</span> with c/sheet</li>
+                <li><span>@Team1.AwayWins</span> away</li>
+                <li><span>@Team1.WonBy5OrMore</span> > 5 goals</li>
+            </ul>
+        </li>
+    </ul>
+
+    <h4>team2 Stats</h4>
+    <ul class="team2 stats">
+        <li class="goals">
+            <span class="num">@Team2.Wins</span> <span class="type">wins</span>
+            <span class="plus full-stats-toggle"><i class="fa fa-plus"></i></span>
+            <ul class="extras">
+                <li><span>@Team2.CleanWins</span> with c/sheet</li>
+                <li><span>@Team2.AwayWins</span> away</li>
+                <li><span>@Team2.WonBy5OrMore</span> > 5 goals</li>
+            </ul>
+        </li>
+        <li class="assists"><span class="num">@Team2.Losses</span> <span class="type">losses</span></li>
+        <li class="apps">
+            <span class="num">@Team2.Draws</span> <span class="type">draws</span> <ul class="extras">
+                <li><span>@Team2.NoScoreDraws</span> no goals</li>
+                <li><span>@Team2.AwayDraws</span> away</li>
+            </ul>
+        </li>
+    </ul>
+</article>
+
+@code {
+    [Parameter]
+    public TeamStats Team1 { get; set; }
+    
+    [Parameter]
+    public TeamStats Team2 { get; set; }
+}

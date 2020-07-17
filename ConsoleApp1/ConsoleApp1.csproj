@@ -1,0 +1,15 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>netcoreapp3.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Content Include="GameData\england-master\.build\clubs.txt" />
+    <Content Include="GameData\england-master\.build\conf.txt" />
+    <Content Include="GameData\england-master\.build\leagues.txt" />
+    <Content Include="GameData\england-master\.build\stats.txt" />
+  </ItemGroup>
+
+</Project>
