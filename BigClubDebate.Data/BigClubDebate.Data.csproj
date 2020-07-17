@@ -12,4 +12,13 @@
     <Content Include="GameData\england-master\.build\stats.txt" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Update="GameData\facup.csv.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="GameData\leaguecup.csv.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
 </Project>

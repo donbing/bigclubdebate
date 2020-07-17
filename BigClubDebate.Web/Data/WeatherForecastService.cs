@@ -29,7 +29,6 @@ namespace BigClubDebate.Web.Data
                 .Select(x => CupGame.FromCsv(x))
                 .Where(x => x != null).ToList();
 
-
             facup = File.ReadAllText(Path.Combine(path, "facup.csv.txt"))
                 .Split(new[] { "\r\n", "\n" }, StringSplitOptions.RemoveEmptyEntries)
                 .Skip(1)
@@ -37,7 +36,6 @@ namespace BigClubDebate.Web.Data
                 .Select(x => CupGame.FromCsv(x))
                 .Where(x => x != null)
                 .ToList();
-
 
             var allLeagues = years.SelectMany(x => x.Leagues);
             allGames = allLeagues.SelectMany(y => y.games);
