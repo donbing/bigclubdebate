@@ -1,11 +1,12 @@
-﻿using System;
+﻿using BigClubDebate.Data;
+using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
 
-namespace ConsoleApp1
+namespace BigClubDebate.Data
 {
     public class League
     {
@@ -17,11 +18,11 @@ namespace ConsoleApp1
         {
             get
             {
-                var st = games.Select(g => g.home).Distinct().ToDictionary(x => x, x => 0);
+                var st = games.Select(g => g.Home).Distinct().ToDictionary(x => x, x => 0);
                 foreach (var game in games)
                 {
-                    st[game.home] += game.PointsFor(game.home);
-                    st[game.away] += game.PointsFor(game.away);
+                    st[game.Home] += game.PointsFor(game.Home);
+                    st[game.Away] += game.PointsFor(game.Away);
                 }
 
                 return st.OrderByDescending(x => x.Value).Select(x => x.Key).ToList();
@@ -87,16 +88,16 @@ namespace ConsoleApp1
             => $"{name+Environment.NewLine}{string.Join(Environment.NewLine,games)}{string.Join(Environment.NewLine, fixtures)}";
         private static Game NewMethod(GroupCollection m) => new Game
         {
-            home = m[1].Value.Trim(),
-            homegoals = int.Parse(m[2].Value.Trim()),
-            away = m[4].Value.Trim(),
-            awaygoals = int.Parse(m[3].Value.Trim()),
+            Home = m[1].Value.Trim(),
+            Homegoals = int.Parse(m[2].Value.Trim()),
+            Away = m[4].Value.Trim(),
+            Awaygoals = int.Parse(m[3].Value.Trim()),
             //date = DateTime.Parse(m[3].Value.Trim()), // needs grouping
         };
         private static Fixture NewMethodFixture(GroupCollection m) => new Fixture
         {
-            home = m[1].Value.Trim(),
-            away = m[4].Value.Trim(),
+            Home = m[1].Value.Trim(),
+            Away = m[4].Value.Trim(),
         };
     }
 }

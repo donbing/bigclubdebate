@@ -3,7 +3,7 @@ using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
 
-namespace ConsoleApp1
+namespace BigClubDebate.Data
 {
     class Program
     {
@@ -21,7 +21,7 @@ namespace ConsoleApp1
                 .Split(new[] { "\r\n","\n"}, StringSplitOptions.RemoveEmptyEntries)
                 .Skip(1)
                 .Select(x => x.Split(","))
-                .Select(x => Game.CupGameFromCsv(x))
+                .Select(x => CupGame.FromCsv(x))
                 .Where(x => x != null);
 
             var utd = new TeamStats(team1, facup, null);

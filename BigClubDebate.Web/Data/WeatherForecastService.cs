@@ -1,11 +1,11 @@
-using ConsoleApp1;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using BigClubDebate.Data;
 
-namespace BlazorApp1.Data
+namespace BigClubDebate.Web.Data
 {
     public class WeatherForecastService
     {
@@ -26,7 +26,7 @@ namespace BlazorApp1.Data
                 .Split(new[] { "\r\n", "\n" }, StringSplitOptions.RemoveEmptyEntries)
                 .Skip(1)
                 .Select(x => x.Split(","))
-                .Select(x => Game.CupGameFromCsv(x))
+                .Select(x => CupGame.FromCsv(x))
                 .Where(x => x != null).ToList();
 
 
@@ -34,7 +34,7 @@ namespace BlazorApp1.Data
                 .Split(new[] { "\r\n", "\n" }, StringSplitOptions.RemoveEmptyEntries)
                 .Skip(1)
                 .Select(x => x.Split(","))
-                .Select(x => Game.CupGameFromCsv(x))
+                .Select(x => CupGame.FromCsv(x))
                 .Where(x => x != null)
                 .ToList();
 
@@ -56,7 +56,7 @@ namespace BlazorApp1.Data
 
         public async Task<(TeamStats, TeamStats)> HeadToHead(TeamName team1, TeamName team2)
         {
-            var headtoHeadGames = allGames.Where(g => g.teams.All(t => team1.Matches(t) || team2.Matches(t)));
+            var headtoHeadGames = allGames.Where(g => g.Teams.All(t => team1.Matches(t) || team2.Matches(t)));
 
             var utd = new TeamStats(team1, headtoHeadGames, null);
             var weds = new TeamStats(team2, headtoHeadGames, null);
@@ -66,7 +66,7 @@ namespace BlazorApp1.Data
         public async Task<(TeamStats, TeamStats)> FaCup(TeamName team1, TeamName team2)
         {
             var standings = facup.GroupBy(x => x.year).Select(year => 
-                year.SelectMany(x => x.teams).Distinct().OrderByDescending(t => year.Count(g => g.Winner == t)).ToList()
+                year.SelectMany(x => x.Teams).Distinct().OrderByDescending(t => year.Count(g => g.Winner == t)).ToList()
             );
             
             var utd = new TeamStats(team1, facup, standings);
@@ -77,7 +77,7 @@ namespace BlazorApp1.Data
         public async Task<(TeamStats, TeamStats)> LeagueCup(TeamName team1, TeamName team2)
         {
             var standings = leagueCup.GroupBy(x => x.year).Select(year =>
-                year.SelectMany(x => x.teams).Distinct().OrderByDescending(t => year.Count(g => g.Winner == t)).ToList()
+                year.SelectMany(x => x.Teams).Distinct().OrderByDescending(t => year.Count(g => g.Winner == t)).ToList()
             );
             var utd = new TeamStats(team1, leagueCup, standings);
             var weds = new TeamStats(team2, leagueCup, standings);
