@@ -11,8 +11,7 @@ use ojective (ish) stastitics to determine which of two football clubs is bigger
  - team logos
  - custom background per matchup
  - tooltip extra-stats
-
-
+ 
 ## data
 
  - taken from: https://github.com/openfootball/england
@@ -20,6 +19,8 @@ use ojective (ish) stastitics to determine which of two football clubs is bigger
  - stadium info is available for staduim coordinates / google maps display)
  - I've not found any good player data, maybe if i do, more interesting stats can be added.
 
+## hacks
+ - msbuild csproj hack: game data is copied from external folder with in [Web.csproj](the website)
 
 ## todo
 front:

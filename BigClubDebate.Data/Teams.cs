@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using BigClubDebate.Data.Model;
 
 namespace BigClubDebate.Data
 {

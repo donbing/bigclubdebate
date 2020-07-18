@@ -1,26 +1,26 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
-using System.Text.RegularExpressions;
 
-namespace BigClubDebate.Data
+namespace BigClubDebate.Data.Model
 {
-    public class Year
+    public class LeagueYear
     {
         public IEnumerable<League> Leagues { get; set; }
 
-        public IEnumerable<Game> Games => Leagues.SelectMany(x => x.games);
+        public IEnumerable<Game> Games 
+            => Leagues.SelectMany(x => x.Games);
 
         public string name;
 
-        public Year(string yearName, IEnumerable<League> leagues) 
+        public LeagueYear(string yearName, IEnumerable<League> leagues) 
         { 
             name = yearName;
             Leagues = leagues;
         }
 
-        public League GetLeague(int v) => Leagues.First(x => x.Priroriry == v);
+        public League GetLeague(int v) 
+            => Leagues.First(x => x.Priority == v);
 
         public override string ToString() 
             => $"{name+Environment.NewLine}{string.Join(Environment.NewLine, Leagues)}";

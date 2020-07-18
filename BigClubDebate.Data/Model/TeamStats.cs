@@ -2,12 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace BigClubDebate.Data
+namespace BigClubDebate.Data.Model
 {
-    class LeagueTable
-    {
-        
-    }
     public class TeamStats
     {
         public TeamName name;
@@ -52,7 +48,7 @@ namespace BigClubDebate.Data
         public int MostGoalsInOneGame
             => games.Select(g => g.GoalsFor(name.ToArray())).DefaultIfEmpty().Max();
         public int GoalsInLast10Years
-            => games.Where(g => g.date.Value.Year >= DateTime.UtcNow.AddYears(-10).Year).Sum(x => x.GoalsFor(name.ToArray()));
+            => games.Where(g => g.Date.Value.Year >= DateTime.UtcNow.AddYears(-10).Year).Sum(x => x.GoalsFor(name.ToArray()));
 
         public int CleanSheets
             => games.Count(g => g.GoalsAgainst(name.ToArray()) == 0);
@@ -63,7 +59,7 @@ namespace BigClubDebate.Data
         public int CompetitionWins 
             => tables.SelectMany(t => t).Count(t => name.Matches(t[0]));
         public DateTime? CompetitionStart => games
-            .Select(x => x.date)
+            .Select(x => x.Date)
             .OrderBy(x => x)
             .Take(1)
             .Min();

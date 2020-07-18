@@ -1,39 +1,17 @@
-﻿using BigClubDebate.Data;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.Globalization;
-using System.IO;
-using System.Linq;
-using System.Text.RegularExpressions;
 
-namespace BigClubDebate.Data
+namespace BigClubDebate.Data.Model
 {
     public class League
     {
-        public string name;
-        public int Priroriry;
-
-        public List<string> Table
-        {
-            get
-            {
-                var st = games.Select(g => g.Home).Distinct().ToDictionary(x => x, x => 0);
-                foreach (var game in games)
-                {
-                    st[game.Home] += game.PointsFor(game.Home);
-                    st[game.Away] += game.PointsFor(game.Away);
-                }
-
-                return st.OrderByDescending(x => x.Value).Select(x => x.Key).ToList();
-            }
-        }
-
-        public IEnumerable<Game> games { get; set; }
-        public IEnumerable<Fixture> fixtures { get; set; }
         public string Year { get; set; }
-
+        public string Name { get; set; }
+        public int Priority { get; set; }
+        public IEnumerable<Game> Games { get; set; }
+        public IEnumerable<Fixture> Fixtures { get; set; }
 
         public override string ToString() 
-            => $"{name+Environment.NewLine}{string.Join(Environment.NewLine,games)}{string.Join(Environment.NewLine, fixtures)}";
+            => $"{Name+Environment.NewLine}{string.Join(Environment.NewLine,Games)}{string.Join(Environment.NewLine, Fixtures)}";
     }
 }

@@ -1,12 +1,8 @@
-﻿using System;
-using System.Text.RegularExpressions;
-
-namespace BigClubDebate.Data
+﻿namespace BigClubDebate.Data.Model
 {
-    public class CupGame : Game {
-
-        public string year { get; set; }
+    public class CupGame : Game 
+    {
+        public string Year { get; set; }
         public string Type { get; set; }
-
     }
 }

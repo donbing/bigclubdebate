@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace BigClubDebate.Data
+namespace BigClubDebate.Data.Model
 {
     public class TeamName : HashSet<string>
     {
@@ -29,5 +29,8 @@ namespace BigClubDebate.Data
 
         public override int GetHashCode()
             => HashCode.Combine(MainName);
+
+        public bool PlayedIn(Game game) 
+            => game.Teams.Any(Matches);
     }
 }

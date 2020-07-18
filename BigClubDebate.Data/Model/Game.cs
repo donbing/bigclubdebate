@@ -1,37 +1,37 @@
 ﻿using System;
 using System.Linq;
 
-namespace BigClubDebate.Data
+namespace BigClubDebate.Data.Model
 {
     public class Game : Fixture
     {
-        public DateTime? date { get; set; }
+        public DateTime? Date { get; set; }
 
-        public int Homegoals { get; set; }
-        public int Awaygoals { get; set; }
+        public int HomeGoals { get; set; }
+        public int AwayGoals { get; set; }
 
         public string Winner 
-            => Homegoals > Awaygoals ? Home : Awaygoals > Homegoals ? Away : null;
+            => HomeGoals > AwayGoals ? Home : AwayGoals > HomeGoals ? Away : null;
 
         public string Loser 
-            => Homegoals < Awaygoals ? Home : Awaygoals < Homegoals ? Away : null;
+            => HomeGoals < AwayGoals ? Home : AwayGoals < HomeGoals ? Away : null;
 
         public bool Drawn 
-            => Homegoals == Awaygoals;
+            => HomeGoals == AwayGoals;
 
-        public int TotalGoals => Awaygoals + Homegoals;
+        public int TotalGoals 
+            => AwayGoals + HomeGoals;
 
-        internal int PointsFor(string teamName) 
+        public int PointsFor(string teamName) 
             => Winner == teamName ? 3 : Loser == teamName ? 0 : 1;
 
-        internal int GoalsFor(params string[] name) 
-            => name.Contains(Home) ? Homegoals : Awaygoals;
+        public int GoalsFor(params string[] name) 
+            => name.Contains(Home) ? HomeGoals : AwayGoals;
 
-        internal int GoalsAgainst(params string[] name) 
-            => name.Contains(Home) ? Awaygoals : Homegoals;
+        public int GoalsAgainst(params string[] name) 
+            => name.Contains(Home) ? AwayGoals : HomeGoals;
 
         public override string ToString()
-            => $"Game: {Home} {Homegoals} - {Awaygoals} {Away}";
-
+            => $"Game: {Home} {HomeGoals}-{AwayGoals} {Away}";
     }
 }

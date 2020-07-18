@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Linq;
+using BigClubDebate.Data.Model;
 
 namespace BigClubDebate.Data
 {
@@ -15,7 +16,7 @@ namespace BigClubDebate.Data
             var openFootballEnglishLeagueReader = new OpenFootballEnglishLeagueReader(path);
 
             var leagueGames = openFootballEnglishLeagueReader.LeagueYears;
-            var facup = openFootballEnglishLeagueReader.CupGames;
+            var facup = openFootballEnglishLeagueReader.FaCupGames;
 
             var utd = new TeamStats(Teams.team5, facup, null);
             var weds = new TeamStats(Teams.team6, facup, null);

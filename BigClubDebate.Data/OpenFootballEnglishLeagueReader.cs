@@ -4,6 +4,7 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
+using BigClubDebate.Data.Model;
 
 namespace BigClubDebate.Data
 {
@@ -14,11 +15,11 @@ namespace BigClubDebate.Data
         private string LeagueDataParentFolder => Path.Combine(_path, "england-master");
         private string LeagueCupFilePath => Path.Combine(_path, "leaguecup.csv.txt");
 
-        public IList<CupGame> CupGames;
+        public IList<CupGame> FaCupGames;
 
-        public IList<CupGame> LeagueCup;
+        public IList<CupGame> LeagueCupGames;
 
-        public IList<Year> LeagueYears;
+        public IList<LeagueYear> LeagueYears;
 
         public OpenFootballEnglishLeagueReader(string path)
         {
@@ -30,7 +31,7 @@ namespace BigClubDebate.Data
                 .OrderBy(x => x.name)
                 .ToList();
 
-            LeagueCup = File.ReadAllText(LeagueCupFilePath)
+            LeagueCupGames = File.ReadAllText(LeagueCupFilePath)
                         .Split(new[] { "\r\n", "\n" }, StringSplitOptions.RemoveEmptyEntries)
                         .Skip(1)
                         .Select(x => x.Split(","))
@@ -38,7 +39,7 @@ namespace BigClubDebate.Data
                         .Where(x => x != null)
                         .ToList();
 
-            CupGames = File.ReadAllText(FaCupFilePath)
+            FaCupGames = File.ReadAllText(FaCupFilePath)
                     .Split(new[] { "\r\n", "\n" }, StringSplitOptions.RemoveEmptyEntries)
                     .Skip(1)
                     .Select(x => x.Split(","))
@@ -46,7 +47,7 @@ namespace BigClubDebate.Data
                     .Where(x => x != null)
                     .ToList();
         }
-        static Year ReadFilesForYearFolder(string yearPath)
+        static LeagueYear ReadFilesForYearFolder(string yearPath)
         {
             var yearFolder = new DirectoryInfo(yearPath);
             var year = yearFolder.Name.Substring(0, 4);
@@ -57,7 +58,7 @@ namespace BigClubDebate.Data
                 .Select(f => ReadYearFromFilePath(f.FullName, year))
                 .ToList();
 
-            return new Year(yearFolder.Name, leagues);
+            return new LeagueYear(yearFolder.Name, leagues);
         }
 
         static CupGame CupGameFrom(string[] x)
@@ -70,15 +71,15 @@ namespace BigClubDebate.Data
 
             return new CupGame
             {
-                date = DateTime.TryParse(x[0].Replace("\"", "").Trim(), out var date)
+                Date = DateTime.TryParse(x[0].Replace("\"", "").Trim(), out var date)
                     ? new DateTime?(date)
                     : null,
 
-                year = x[1].Replace("\"", "").Trim(),
+                Year = x[1].Replace("\"", "").Trim(),
                 Home = x[2].Replace("\"", "").Trim(),
                 Away = x[3].Replace("\"", "").Trim(),
-                Homegoals = int.Parse(reg.Groups[1].Value),
-                Awaygoals = int.Parse(reg.Groups[2].Value),
+                HomeGoals = int.Parse(reg.Groups[1].Value),
+                AwayGoals = int.Parse(reg.Groups[2].Value),
                 Type = x[7],
             };
         }
@@ -129,10 +130,10 @@ namespace BigClubDebate.Data
 
             return new League
             {
-                Priroriry = priority,
-                name = name,
-                games = games,
-                fixtures = fixtures,
+                Priority = priority,
+                Name = name,
+                Games = games,
+                Fixtures = fixtures,
                 Year = year,
             };
         }
@@ -140,10 +141,10 @@ namespace BigClubDebate.Data
         static Game ParseGameFrom(GroupCollection m, DateTime? date) => new Game
         {
             Home = m[1].Value.Trim(),
-            Homegoals = int.Parse(m[2].Value.Trim()),
+            HomeGoals = int.Parse(m[2].Value.Trim()),
             Away = m[4].Value.Trim(),
-            Awaygoals = int.Parse(m[3].Value.Trim()),
-            date = date,
+            AwayGoals = int.Parse(m[3].Value.Trim()),
+            Date = date,
         };
 
          static Fixture ParseFixtureFrom(GroupCollection m) => new Fixture
