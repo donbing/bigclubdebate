@@ -1,6 +1,11 @@
-﻿
+﻿@using BigClubDebate.Data
+
     <section class="stats-section fw-block" style="margin-bottom: 25px;">
-        <h2 class="year-bar fw-block">@SectionName</h2>
+        <div class="year-bar fw-block stats-header">
+            <p class="stats team1">est <em>@Team1?.CompetitionStart.Value.ToString("yyyy")</em></p>
+            <p class="stats team2">est <em>@Team2?.CompetitionStart.Value.ToString("yyyy")</em></p>
+            <h2>@SectionName</h2>
+        </div>
         <div class="fw-block has-full-stats">
             <div class="stats-block-wrap fw-block all-comps @MoreInfo">
                 @ChildContent
@@ -15,6 +20,13 @@
     </section>
 
 @code {
+    [Parameter]
+    public TeamStats Team1 { get; set; }
+    [Parameter]
+    public TeamStats Team2 { get; set; }
+
+    [Parameter]
+    public string Since { get; set; }
     [Parameter]
     public bool Expandable { get; set; } = true;
 

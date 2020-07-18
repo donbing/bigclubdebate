@@ -1,5 +1,8 @@
 ﻿@page "/"
 
+@using BigClubDebate.Web.Pages;
+@using BigClubDebate.Data
+
 @inject BigClubDebate.Web.Data.WeatherForecastService ForecastService
 
 @if (div1 == default)
@@ -14,16 +17,16 @@ else
             <br/>
             <h1>
                 <select id="team1Select" @bind="team1Name">
-                    @foreach (var team in Teams.Except(new[] { team2 }).ToList())
+                    @foreach (var team in Teams.ToList())
                     {
-                        <option value="@team.MainName">@team.SlangName</option>
+                        <option value="@team.MainName" disabled="@(team2Name == team.MainName)">@team.SlangName</option>
                     }
                 </select>
                 <span>VS</span>
                 <select id="team2Select" @bind="team2Name">
-                    @foreach (var team in Teams.Except(new[] { team1 }).ToList())
+                    @foreach (var team in Teams.ToList())
                     {
-                        <option value="@team.MainName" >@team.SlangName</option>
+                        <option value="@team.MainName" disabled="@(team1Name == team.MainName)">@team.SlangName</option>
                     }
                 </select>
             </h1>
@@ -33,11 +36,13 @@ else
         </div>
     </section>
 
-    <StatsSection SectionName="Head to Head" Expandable="false">
-        <GameResults Team1="head2head.Item1" Team2="head2head.Item2"></GameResults>
+    <StatsSection SectionName="Head to Head" Expandable="false" Team1="head2head.Item1" Team2="head2head.Item2">
+        <GameResults Team1="head2head.Item1" Team2="head2head.Item2">
+            <p>League Games</p>
+        </GameResults>
     </StatsSection>
 
-    <StatsSection SectionName="Division 1 / Premiership">
+    <StatsSection SectionName="Division 1 / Premiership" Team1="div1.Item1" Team2="div1.Item2">
         <CompetitionResults Team1="div1.Item1" Team2="div1.Item2">
             @*<ul class="middle_opts">
                 <li><a title="Players" href="#playersModal"><img width="40px" src="images/player.png" /><div class="extraStats">foo</div></a></li>
@@ -49,13 +54,13 @@ else
         <GoalResults Team1="div1.Item1" Team2="div1.Item2"></GoalResults>
     </StatsSection>
 
-    <StatsSection SectionName="FA Cup">
+    <StatsSection SectionName="FA Cup" Team1="faCup.Item1" Team2="faCup.Item2">
         <CompetitionResults Team1="faCup.Item1" Team2="faCup.Item2"></CompetitionResults>
         <GameResults Team1="faCup.Item1" Team2="faCup.Item2"></GameResults>
         <GoalResults Team1="faCup.Item1" Team2="faCup.Item2"></GoalResults>
     </StatsSection>
 
-    <StatsSection SectionName="League Cup">
+    <StatsSection SectionName="League Cup" Team1="leagueCup.Item1" Team2="leagueCup.Item2">
         <CompetitionResults Team1="leagueCup.Item1" Team2="leagueCup.Item2"></CompetitionResults>
         <GameResults Team1="leagueCup.Item1" Team2="leagueCup.Item2"></GameResults>
         <GoalResults Team1="leagueCup.Item1" Team2="leagueCup.Item2"></GoalResults>
@@ -70,13 +75,9 @@ else
 
     TeamName team1;
     TeamName team2;
-    TeamName team5 = new TeamName(new[] { "Sheffield United FC", "Blades", "Sheffield Utd", "Sheffield United" }, "utd.png");
-    TeamName team6 = new TeamName(new[] { "Sheffield Wednesday FC", "Owls", "Sheffield Wed", "Sheffield Wednesday" }, "wed.png");
-    TeamName team3 = new TeamName(new[] { "Leeds United FC", "Leeds", "Leeds United", "Leeds Utd" }, "leeds.png");
-    TeamName team4 = new TeamName(new[] { "Manchester United FC", "Red Devils", "Manchester United", "Manchester Utd", "Man Utd" }, "manu.png");
 
 
-    TeamName[] Teams => new[] { team5, team6, team3, team4 };
+    TeamName[] Teams => new[] {_teams.team5, _teams.team6, _teams.team3, _teams.team4 };
     string tagLine = "The steel city derby";
 
     (TeamStats, TeamStats) faCup { get; set; }
@@ -85,12 +86,13 @@ else
     (TeamStats, TeamStats) leagueCup { get; set; }
 
     int divisionNumber = 1;
+    private readonly Teams _teams = new Teams();
 
     protected override async Task OnInitializedAsync()
     {
-        team1 = team5;
+        team1 = _teams.team5;
         team1Name = team1.MainName;
-        team2 = team6;
+        team2 = _teams.team6;
         team2Name = team2.MainName;
         await LoadData();
     }
@@ -98,6 +100,7 @@ else
     async Task LoadData() {
         team1 = Teams.SingleOrDefault(x => x.MainName == team1Name);
         team2 = Teams.SingleOrDefault(x => x.MainName == team2Name);
+
         div1 = await ForecastService.GetDivision(divisionNumber, team1, team2);
         head2head = await ForecastService.HeadToHead(team1, team2);
         faCup = await ForecastService.FaCup(team1, team2);
@@ -105,3 +108,4 @@ else
     }
 
 }
+

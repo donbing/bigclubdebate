@@ -1,32 +1,26 @@
 ﻿using System;
 using System.IO;
 using System.Linq;
-using System.Text.RegularExpressions;
 
 namespace BigClubDebate.Data
 {
     class Program
     {
+        private static readonly Teams Teams = new Teams();
+
         static void Main(string[] args)
         {
-            var path = @"C:\Users\chris\source\repos\ConsoleApp1\ConsoleApp1\GameData";
+            var path = Path.Combine(Directory.GetCurrentDirectory(), "GameData");
 
-            var years = Directory.EnumerateDirectories(Path.Combine(path, "england-master"), "????-??", SearchOption.AllDirectories)
-                .Select(yearPath => Year.FromPath(yearPath))
-                .OrderBy(x => x.name);
+            var openFootballEnglishLeagueReader = new OpenFootballEnglishLeagueReader(path);
 
-            var (team1, team2) = (new[] { "Sheffield United FC", "Sheffield Utd", "Sheffield United" }, new[] { "Sheffield Wednesday FC", "Sheffield Wed", "Sheffield Wednesday" });
+            var leagueGames = openFootballEnglishLeagueReader.LeagueYears;
+            var facup = openFootballEnglishLeagueReader.CupGames;
 
-            var facup = File.ReadAllText(Path.Combine(path, "facup.csv.txt"))
-                .Split(new[] { "\r\n","\n"}, StringSplitOptions.RemoveEmptyEntries)
-                .Skip(1)
-                .Select(x => x.Split(","))
-                .Select(x => CupGame.FromCsv(x))
-                .Where(x => x != null);
+            var utd = new TeamStats(Teams.team5, facup, null);
+            var weds = new TeamStats(Teams.team6, facup, null);
 
-            var utd = new TeamStats(team1, facup, null);
-            var weds = new TeamStats(team2, facup, null);
-            NewMethod(utd, weds);
+            ShowStats(utd, weds);
 
             //Console.WriteLine(string.Join(Environment.NewLine, facup));
             //DisplayD1Data(years, team1, team2);
@@ -41,10 +35,10 @@ namespace BigClubDebate.Data
 
             var utd = new TeamStats(team1, allGames, tables);
             var weds = new TeamStats(team2, allGames, tables);
-            NewMethod(utd, weds);
+            ShowStats(utd, weds);
         }
 
-        private static void NewMethod(TeamStats utd, TeamStats weds)
+        private static void ShowStats(TeamStats utd, TeamStats weds)
         {
             Console.WriteLine($"{utd.name} wins:{utd.Wins}");
             Console.WriteLine($"{weds.name} wins:{weds.Wins}");
