@@ -93,7 +93,9 @@ body{font:95% Roboto, sans-serif;background:url(../../images/bodybg.jpg) center 
 
 @media screen and (min-width: 750px){.team2 li:first-child .tip{margin-left:-70px}}
 @media screen and (min-width: 1170px){.team2 li:first-child .tip{margin-left:-50px}}.old-honours-head{margin-bottom:15px}.old-honours{display:none}.honours-personal h4{padding:15px;display:block;cursor:pointer;margin-bottom:10px}.honours-personal h4:hover{opacity:.9}.honours-personal ul{padding:15px;background:rgba(255,255,255,0.1);display:none}.honours-personal li{padding:5px 0;text-align:left;position:relative;margin-left:15px}.honours-personal li:before{content:"\f105";font:1.1em FontAwesome;color:#ffd200;margin-right:10px;position:absolute;left:-15px;top:7px}.honours-personal li span{font-weight:100}.honours-personal .team2 li:before{color:#1e7dff}
-
+ul li {
+    list-style-type: none;
+}
 .masthead .container h1{
 	background-color: rgba(0, 0, 0, 0.24);
 	border-radius: 8px;

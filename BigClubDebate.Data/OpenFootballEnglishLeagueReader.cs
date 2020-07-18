@@ -14,6 +14,12 @@ namespace BigClubDebate.Data
         private string LeagueDataParentFolder => Path.Combine(_path, "england-master");
         private string LeagueCupFilePath => Path.Combine(_path, "leaguecup.csv.txt");
 
+        public IList<CupGame> CupGames;
+
+        public IList<CupGame> LeagueCup;
+
+        public IList<Year> LeagueYears;
+
         //https://github.com/openfootball/england
         public OpenFootballEnglishLeagueReader(string path)
         {
@@ -41,13 +47,6 @@ namespace BigClubDebate.Data
                     .Where(x => x != null)
                     .ToList();
         }
-
-        public IList<CupGame> CupGames;
-
-        public IList<CupGame> LeagueCup;
-
-        public IList<Year> LeagueYears;
-
         static Year ReadFilesForYearFolder(string yearPath)
         {
             var yearFolder = new DirectoryInfo(yearPath);

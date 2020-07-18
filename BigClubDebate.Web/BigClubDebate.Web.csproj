@@ -5,6 +5,13 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="GameData\**" />
+    <Content Remove="GameData\**" />
+    <EmbeddedResource Remove="GameData\**" />
+    <None Remove="GameData\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="3.0.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="3.0.0">
       <PrivateAssets>all</PrivateAssets>
@@ -63,6 +70,16 @@
     </Content>
   </ItemGroup>
 
+  <ItemGroup>
+    <ExtraContent Include="$(MSBuildProjectDirectory)\..\Content\GameData\**" />
+  </ItemGroup>
+
+  <Target Name="copyGameData" AfterTargets="Build">
+    <Copy
+      SourceFiles="@(ExtraContent)"
+      DestinationFiles="@(ExtraContent->'$(TargetDir)\GameData\%(RecursiveDir)%(Filename)%(Extension)')"
+      SkipUnchangedFiles="true" />
+  </Target>
 
   <PropertyGroup>
     <BlazorLinkOnBuild Condition="'$(Configuration)'!='Release'">false</BlazorLinkOnBuild>

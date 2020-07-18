@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Threading.Tasks;
 using BigClubDebate.Data;
 
@@ -15,7 +16,10 @@ namespace BigClubDebate.Web.Data
 
         public WeatherForecastService()
         {
-            var path = Path.Combine(Directory.GetCurrentDirectory(), "..", "Content", "GameData");
+            var binDir = Path.GetDirectoryName(Assembly.GetEntryAssembly().Location);
+
+            var path = Path.Combine(binDir, "GameData");
+
             var r = new OpenFootballEnglishLeagueReader(path);
 
             years = r.LeagueYears;
