@@ -26,7 +26,7 @@ namespace BigClubDebate.Data
             //DisplayD1Data(years, team1, team2);
         }
 
-        private static void DisplayD1Data(IOrderedEnumerable<Year> years, string[] team1, string[] team2)
+        private static void DisplayD1Data(IOrderedEnumerable<Year> years, TeamName team1, TeamName team2)
         {
             var topLeague = years.Select(x => x.GetLeague(1));
 
