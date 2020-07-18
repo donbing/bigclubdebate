@@ -22,11 +22,11 @@ use ojective (ish) stastitics to determine which of two football clubs is bigger
 
 ## todo
 
- - fix numbers not fitting in boxes
- - needs last update date at top
+ - custom backgrounds per teams
+ - last update date at top
  - add more .extras (tool tip items)
- - fix bug causing head to head extras not to display fully
  - add stadium info
+ - fix numbers not fitting in boxes
  - add player/graph/transfers dialog
  - nicer fonts
  - make more/less tranasion even smoother
