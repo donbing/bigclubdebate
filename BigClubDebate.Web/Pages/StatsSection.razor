@@ -39,7 +39,7 @@
     public string moreInfo { get; set; } = "more";
     public string MoreInfo => Expandable ? moreInfo : "";
 
-    async Task MoreClicked(MouseEventArgs e)
+    void MoreClicked(MouseEventArgs e)
     {
         moreInfo = Expandable ? moreInfo == "more" ? "less" : "more" : "";
     }

@@ -23,20 +23,22 @@ use ojective (ish) stastitics to determine which of two football clubs is bigger
 
 ## todo
 front:
- - resize logos
+ 
  - last update date at top
  - custom tagline for derbys
- 
+ - nicer background transition
+ - nicer fonts
+
  - add stadium info
  - add more .extras (tool tip items)
  
  - add player/graph/transfers dialog
- - nicer fonts
  - make more/less transion even smoother
  - make more/less button take up less space
 
  * fix numbers not fitting in boxes
  * custom backgrounds per team
+ * resize logos
 
  back:
   - how to store data

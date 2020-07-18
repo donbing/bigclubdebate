@@ -26,8 +26,10 @@
     <script>
         function setbackground(newBackground) {
             $("body").css(
-                'background',
-                'radial-gradient(rgba(0,0,0,0.5) 0%, rgba(0,0,0,0.99) 50%), url("backgrounds/' + newBackground + '") center 40px fixed'
+                {
+                    'background': 'radial-gradient(rgba(0,0,0,0.5) 0%, rgba(0,0,0,0.99) 50%), url("backgrounds/' + newBackground + '")  no-repeat center center fixed',
+                    'background-size': 'cover'
+                }
             );
         }
     </script>

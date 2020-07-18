@@ -97,10 +97,10 @@ namespace BigClubDebate.Data
 
         static League ReadYearFromText(int priority, string name, string fileText, string year)
         {
-            var v = fileText.Split(new[] { "\n", "\r\n" }, StringSplitOptions.RemoveEmptyEntries);
-            IList<Game> games = new List<Game>();
+            var fileLines = fileText.Split(new[] { "\n", "\r\n" }, StringSplitOptions.RemoveEmptyEntries);
+            var games = new List<Game>();
             var date = new DateTime?();
-            foreach (var line in v)
+            foreach (var line in fileLines)
             {
                 if (line.StartsWith("["))
                 {
@@ -120,7 +120,7 @@ namespace BigClubDebate.Data
                 }
             }
 
-            var fixtures = v
+            var fixtures = fileLines
                 .Select(g => Regex.Match(g, @"^  (.*)(\D) - (\D)(.*)"))
                 .Where(rx => rx.Success)
                 .Select(rx => rx.Groups)
