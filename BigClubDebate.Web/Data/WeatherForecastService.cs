@@ -1,16 +1,13 @@
-using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using BigClubDebate.Data;
-using Microsoft.Extensions.PlatformAbstractions;
 
 namespace BigClubDebate.Web.Data
 {
     public class WeatherForecastService
     {
-        //string path = @"C:\Users\chris\source\repos\ConsoleApp1\ConsoleApp1\GameData";
         private IEnumerable<Year> years;
         private IEnumerable<CupGame> leagueCup;
         private IEnumerable<CupGame> facup;
