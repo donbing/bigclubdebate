@@ -132,7 +132,8 @@ namespace BigClubDebate.Data
                 Priroriry = priority,
                 name = name,
                 games = games,
-                fixtures = fixtures
+                fixtures = fixtures,
+                Year = year,
             };
         }
 

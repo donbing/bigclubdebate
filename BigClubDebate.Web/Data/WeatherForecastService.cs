@@ -34,7 +34,8 @@ namespace BigClubDebate.Web.Data
         {
             var topLeague = years.Select(x => x.GetLeague(division));
             var allGames = topLeague.SelectMany(y => y.games);
-            var tables = topLeague.Select(x => x.Table);
+            var tables = topLeague.ToLookup(x =>x.Year,x => x.Table);
+
             var utd = new TeamStats(team1, allGames, tables);
             var weds = new TeamStats(team2, allGames, tables);
 
@@ -53,10 +54,15 @@ namespace BigClubDebate.Web.Data
 
         public Task<(TeamStats, TeamStats)> FaCup(TeamName team1, TeamName team2)
         {
-            var standings = facup.GroupBy(x => x.year).Select(year => 
-                year.SelectMany(x => x.Teams).Distinct().OrderByDescending(t => year.Count(g => g.Winner == t)).ToList()
-            );
-            
+            var standings = leagueCup.GroupBy(x => x.year)
+                .ToLookup(
+                    year => year.Key,
+                    seasonGames => seasonGames.SelectMany(x => x.Teams)
+                        .Distinct()
+                        .OrderByDescending(t => seasonGames.Count(g => g.Winner == t))
+                        .ToList()
+                );
+
             var utd = new TeamStats(team1, facup, standings);
             var weds = new TeamStats(team2, facup, standings);
 
@@ -65,9 +71,15 @@ namespace BigClubDebate.Web.Data
 
         public  Task<(TeamStats, TeamStats)> LeagueCup(TeamName team1, TeamName team2)
         {
-            var standings = leagueCup.GroupBy(x => x.year).Select(year =>
-                year.SelectMany(x => x.Teams).Distinct().OrderByDescending(t => year.Count(g => g.Winner == t)).ToList()
+            var standings = leagueCup.GroupBy(x => x.year)
+                .ToLookup(
+                    year => year.Key, 
+                    year => year.SelectMany(x => x.Teams)
+                        .Distinct()
+                        .OrderByDescending(t => year.Count(g => g.Winner == t))
+                        .ToList()
             );
+
             var utd = new TeamStats(team1, leagueCup, standings);
             var weds = new TeamStats(team2, leagueCup, standings);
 

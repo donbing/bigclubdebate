@@ -30,6 +30,7 @@ namespace BigClubDebate.Data
 
         public IEnumerable<Game> games { get; set; }
         public IEnumerable<Fixture> fixtures { get; set; }
+        public string Year { get; set; }
 
 
         public override string ToString() 

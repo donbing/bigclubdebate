@@ -26,18 +26,6 @@ namespace BigClubDebate.Data
             //DisplayD1Data(years, team1, team2);
         }
 
-        private static void DisplayD1Data(IOrderedEnumerable<Year> years, TeamName team1, TeamName team2)
-        {
-            var topLeague = years.Select(x => x.GetLeague(1));
-
-            var tables = topLeague.Select(d => d.Table).Skip(1);
-            var allGames = topLeague.SelectMany(y => y.games);
-
-            var utd = new TeamStats(team1, allGames, tables);
-            var weds = new TeamStats(team2, allGames, tables);
-            ShowStats(utd, weds);
-        }
-
         private static void ShowStats(TeamStats utd, TeamStats weds)
         {
             Console.WriteLine($"{utd.name} wins:{utd.Wins}");
@@ -58,8 +46,8 @@ namespace BigClubDebate.Data
             Console.WriteLine($"{utd.name} drawn:{utd.Draws}");
             Console.WriteLine($"{weds.name} drawn:{weds.Draws}");
 
-            Console.WriteLine($"{utd.name} won:{utd.Chapions}");
-            Console.WriteLine($"{weds.name} won:{weds.Chapions}");
+            Console.WriteLine($"{utd.name} won:{utd.CompetitionWins}");
+            Console.WriteLine($"{weds.name} won:{weds.CompetitionWins}");
 
             Console.WriteLine($"{utd.name} runner up:{utd.RunnersUp}");
             Console.WriteLine($"{weds.name} runner up:{weds.RunnersUp}");
