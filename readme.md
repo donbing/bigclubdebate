@@ -15,13 +15,15 @@ use ojective (ish) stastitics to determine which of two football clubs is bigger
 
 ## data
 
+ - taken from: https://github.com/openfootball/england
  - FACup, League Cup and Division 1-4 stats have been gathered and used to project interesting statistic about two chosen clubs
  - stadium info is available for staduim coordinates / google maps display)
  - I've not found any good player data, maybe if i do, more interesting stats can be added.
 
 
 ## todo
-
+front:
+ - resize logos
  - last update date at top
  - custom tagline for derbys
  
@@ -35,3 +37,7 @@ use ojective (ish) stastitics to determine which of two football clubs is bigger
 
  * fix numbers not fitting in boxes
  * custom backgrounds per team
+
+ back:
+  - how to store data
+  - how to keep data up to date

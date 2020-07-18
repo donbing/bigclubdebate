@@ -19,14 +19,14 @@ else
                 <br />
                 <h1>
                     <select id="team1Select" @bind="team1Name">
-                        @foreach (var team in _teams.ToList())
+                        @foreach (var team in teams.ToList())
                         {
                             <option value="@team.MainName" disabled="@(team2Name == team.MainName)">@team.SlangName</option>
                         }
                     </select>
                     <span>VS</span>
                     <select id="team2Select" @bind="team2Name">
-                        @foreach (var team in _teams.ToList())
+                        @foreach (var team in teams.ToList())
                         {
                             <option value="@team.MainName" disabled="@(team1Name == team.MainName)">@team.SlangName</option>
                         }
@@ -88,29 +88,25 @@ else
     (TeamStats, TeamStats) leagueCup { get; set; }
 
     int divisionNumber = 1;
-    private readonly Teams _teams = new Teams();
+    private readonly Teams teams = new Teams();
     
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
         if (firstRender)
-        {team1 = _teams.team5;
+        {
+            team1 = teams.team5;
             team1Name = team1.MainName;
-            team2 = _teams.team6;
+            team2 = teams.team6;
             team2Name = team2.MainName;
             await LoadData();
             StateHasChanged();
         }
-        
-    }
-
-    protected override async Task OnInitializedAsync()
-    {
     }
 
     async Task LoadData()
     {
-        team1 = _teams.SingleOrDefault(x => x.MainName == team1Name);
-        team2 = _teams.SingleOrDefault(x => x.MainName == team2Name);
+        team1 = teams.SingleOrDefault(x => x.MainName == team1Name);
+        team2 = teams.SingleOrDefault(x => x.MainName == team2Name);
 
         div1 = await ForecastService.GetDivision(divisionNumber, team1, team2);
         head2head = await ForecastService.HeadToHead(team1, team2);

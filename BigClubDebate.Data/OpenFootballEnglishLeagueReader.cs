@@ -20,16 +20,16 @@ namespace BigClubDebate.Data
 
         public IList<Year> LeagueYears;
 
-        //https://github.com/openfootball/england
         public OpenFootballEnglishLeagueReader(string path)
         {
             _path = path;
+
             LeagueYears = Directory
                 .EnumerateDirectories(LeagueDataParentFolder, "????-??", SearchOption.AllDirectories)
                 .Select(ReadFilesForYearFolder)
                 .OrderBy(x => x.name)
                 .ToList();
-            ;
+
             LeagueCup = File.ReadAllText(LeagueCupFilePath)
                         .Split(new[] { "\r\n", "\n" }, StringSplitOptions.RemoveEmptyEntries)
                         .Skip(1)
@@ -38,8 +38,7 @@ namespace BigClubDebate.Data
                         .Where(x => x != null)
                         .ToList();
 
-            CupGames =
-                File.ReadAllText(FaCupFilePath)
+            CupGames = File.ReadAllText(FaCupFilePath)
                     .Split(new[] { "\r\n", "\n" }, StringSplitOptions.RemoveEmptyEntries)
                     .Skip(1)
                     .Select(x => x.Split(","))
@@ -116,8 +115,7 @@ namespace BigClubDebate.Data
 
                 if (gameMatch.Success)
                 {
-                    var g = ParseGameFrom(gameMatch.Groups);
-                    g.date = date;
+                    var g = ParseGameFrom(gameMatch.Groups, date);
                     games.Add(g);
                 }
             }
@@ -138,13 +136,13 @@ namespace BigClubDebate.Data
             };
         }
 
-        static Game ParseGameFrom(GroupCollection m) => new Game
+        static Game ParseGameFrom(GroupCollection m, DateTime? date) => new Game
         {
             Home = m[1].Value.Trim(),
             Homegoals = int.Parse(m[2].Value.Trim()),
             Away = m[4].Value.Trim(),
             Awaygoals = int.Parse(m[3].Value.Trim()),
-            //date = DateTime.Parse(m[3].Value.Trim()), // needs grouping
+            date = date,
         };
 
          static Fixture ParseFixtureFrom(GroupCollection m) => new Fixture

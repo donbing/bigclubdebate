@@ -8,7 +8,7 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>BlazorApp1</title>
+    <title>The Big Club Debate</title>
     <base href="~/" />
     <link rel="stylesheet" href="css/bootstrap/bootstrap.min.css" />
     <link href="css/site.css" rel="stylesheet" />
@@ -24,15 +24,11 @@
 
     <script src="_framework/blazor.server.js"></script>
     <script>
-        function onBlazorReady() {
-            $("#resizable").resizable();
-            $("#dd").dialog();
-            alert("ds");
-        }
         function setbackground(newBackground) {
-            
-            $("body").css('background', 'radial-gradient(rgba(0,0,0,0.5) 0%, rgba(0,0,0,0.99) 50%), url("backgrounds/' + newBackground + '") center 40px fixed');
-            
+            $("body").css(
+                'background',
+                'radial-gradient(rgba(0,0,0,0.5) 0%, rgba(0,0,0,0.99) 50%), url("backgrounds/' + newBackground + '") center 40px fixed'
+            );
         }
     </script>
 </body>
