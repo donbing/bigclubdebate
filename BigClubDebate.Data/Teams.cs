@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using BigClubDebate.Data.Model;
+using BigClubDebate.Data.Model.DataTypes;
 
 namespace BigClubDebate.Data
 {

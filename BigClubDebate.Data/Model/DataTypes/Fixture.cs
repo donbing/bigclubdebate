@@ -1,4 +1,4 @@
-﻿namespace BigClubDebate.Data.Model
+﻿namespace BigClubDebate.Data.Model.DataTypes
 {
     public class Fixture
     {

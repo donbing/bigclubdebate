@@ -1,8 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using BigClubDebate.Data.Model.DataTypes;
 
-namespace BigClubDebate.Data.Model
+namespace BigClubDebate.Data.Model.DataSources
 {
     public class CupTable : List<string>
     {

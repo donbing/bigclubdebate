@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
 using BigClubDebate.Data.Model;
+using BigClubDebate.Data.Model.DataTypes;
 
 namespace BigClubDebate.Data
 {
@@ -19,7 +20,7 @@ namespace BigClubDebate.Data
 
         public IList<CupGame> LeagueCupGames;
 
-        public IList<LeagueSeason> LeagueSeasons;
+        public IList<Season> LeagueSeasons;
 
         public OpenFootballEnglishLeagueReader(string path)
         {
@@ -44,7 +45,7 @@ namespace BigClubDebate.Data
                 .Where(x => x != null)
                 .ToList();
 
-        static LeagueSeason ReadFilesForYearFolder(string yearPath)
+        static Season ReadFilesForYearFolder(string yearPath)
         {
             var seasonName = Path.GetFileNameWithoutExtension(yearPath);
             var year = seasonName.Substring(0, 4);
@@ -55,7 +56,7 @@ namespace BigClubDebate.Data
                 .Select(f => ReadYearFromFilePath(f, year))
                 .ToList();
 
-            return new LeagueSeason(seasonName, divisions);
+            return new Season(seasonName, divisions);
         }
 
         static CupGame CupGameFrom(string[] x)

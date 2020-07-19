@@ -2,7 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 
-namespace BigClubDebate.Data.Model
+namespace BigClubDebate.Data.Model.DataTypes
 {
     public class Division : IEnumerable<Game>
     {

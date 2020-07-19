@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using BigClubDebate.Data.Model;
+using BigClubDebate.Data.Model.DataSources;
+using BigClubDebate.Data.Model.DataTypes;
 
 namespace BigClubDebate.Data
 {

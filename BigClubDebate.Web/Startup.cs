@@ -32,6 +32,7 @@ namespace BigClubDebate.Web
             services.AddServerSideBlazor();
             services.AddSingleton(s => new OpenFootballEnglishLeagueReader(Path.Combine(Path.GetDirectoryName(Assembly.GetEntryAssembly().Location), "GameData")));
             services.AddSingleton<Teams>();
+            services.AddSingleton<WittyTagLineGenerator>();
             services.AddSingleton<LeagueData>();
             services.AddSingleton<CupData>();
         }

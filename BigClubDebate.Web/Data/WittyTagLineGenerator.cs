@@ -1,6 +1,7 @@
 using System.Linq;
 using BigClubDebate.Data;
 using BigClubDebate.Data.Model;
+using BigClubDebate.Data.Model.DataTypes;
 
 namespace BigClubDebate.Web.Data
 {

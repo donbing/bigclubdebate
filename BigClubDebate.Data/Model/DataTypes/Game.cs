@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Linq;
 
-namespace BigClubDebate.Data.Model
+namespace BigClubDebate.Data.Model.DataTypes
 {
     public class Game : Fixture
     {

@@ -1,13 +1,14 @@
 ﻿@page "/"
 
 @using BigClubDebate.Data
-@using BigClubDebate.Web.Pages
 @using BigClubDebate.Data.Model
+@using BigClubDebate.Data.Model.DataSources
+@using BigClubDebate.Data.Model.DataTypes
 @using BigClubDebate.Web.Data
 
-@inject BigClubDebate.Web.Data.LeagueData LeagueData
-@inject WittyTagLineGenerator;
-@inject BigClubDebate.Web.Data.CupData CupData
+@inject LeagueGames LeagueData
+@inject WittyTagLineGenerator TagGenerator
+@inject CupGames CupData
 @inject IJSRuntime JsRuntime
 
 @if (div1 == default)
@@ -130,11 +131,11 @@ else
         team1 = teams.SingleOrDefault(x => x.MainName == Team1Name);
         team2 = teams.SingleOrDefault(x => x.MainName == Team2Name);
 
-        div1 = await CreateTeamsStats(LeagueData.GetSeasonsForDivision(1), LeagueData.GetTables(1));
+        div1 = await CreateTeamsStats(LeagueData.DivisionGames(1), LeagueData.DivisionTables(1));
         head2head = await CreateTeamsStats(LeagueData.HeadToHeadGames(team1, team2));
         faCup = await CreateTeamsStats(CupData.FaCupGames, CupData.FaCupTables);
         leagueCup = await CreateTeamsStats(CupData.LeagueCupGames, CupData.LeagueCupTables);
-        tagLine = WittyTagLineGenerator.ForTeams(team1, team2);
+        tagLine = TagGenerator.ForTeams(team1, team2);
         await JsRuntime.InvokeVoidAsync("setbackground", team1.BackGroundName);
     }
 

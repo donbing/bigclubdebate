@@ -1,11 +1,10 @@
 using System.Collections.Generic;
 using System.Linq;
-using BigClubDebate.Data;
-using BigClubDebate.Data.Model;
+using BigClubDebate.Data.Model.DataTypes;
 
-namespace BigClubDebate.Web.Data
+namespace BigClubDebate.Data.Model.DataSources
 {
-    public class CupData
+    public class CupGames
     {
         public IEnumerable<CupGame> FaCupGames { get; }
 
@@ -15,7 +14,7 @@ namespace BigClubDebate.Web.Data
 
         public ILookup<string, List<string>> LeagueCupTables { get; }
 
-        public CupData(OpenFootballEnglishLeagueReader data)
+        public CupGames(OpenFootballEnglishLeagueReader data)
         {
             FaCupGames = data.FaCupGames; 
             LeagueCupGames = data.LeagueCupGames;
