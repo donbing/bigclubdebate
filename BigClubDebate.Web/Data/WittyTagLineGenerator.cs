@@ -27,6 +27,10 @@ namespace BigClubDebate.Web.Data
             if (NorthWestTeams.All(teams.Contains))
                 return "The North West Derby";
 
+            var liverpoolTeams = new[] { _teams.Liverpool, _teams.Everton };
+            if (liverpoolTeams.All(teams.Contains))
+                return "The Liverpool Derby";
+
             return "who is the bigger club?";
         }
     }

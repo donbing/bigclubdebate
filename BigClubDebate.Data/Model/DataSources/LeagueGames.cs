@@ -1,14 +1,15 @@
 using System.Collections.Generic;
 using System.Linq;
 using BigClubDebate.Data.Model.DataTypes;
+using BigClubDebate.Data.Model.Reader;
 
 namespace BigClubDebate.Data.Model.DataSources
 {
     public class LeagueGames
     {
-        readonly OpenFootballEnglishLeagueReader data;
+        readonly FootyDataReader data;
 
-        public LeagueGames(OpenFootballEnglishLeagueReader data) 
+        public LeagueGames(FootyDataReader data) 
             => this.data = data;
 
         public IEnumerable<Game> HeadToHeadGames(TeamName team1, TeamName team2) 

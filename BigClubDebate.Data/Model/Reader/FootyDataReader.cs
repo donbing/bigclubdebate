@@ -4,18 +4,17 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
-using BigClubDebate.Data.Model;
 using BigClubDebate.Data.Model.DataTypes;
 
-namespace BigClubDebate.Data
+namespace BigClubDebate.Data.Model.Reader
 {
-    public class OpenFootballEnglishLeagueReader 
+    public class FootyDataReader 
     {
         public readonly IList<CupGame> FaCupGames;
         public readonly IList<CupGame> LeagueCupGames;
         public readonly IList<Season> LeagueSeasons;
 
-        public OpenFootballEnglishLeagueReader(FootballDataFolderConfig config)
+        public FootyDataReader(FootballDataFolderConfig config)
         {
             LeagueSeasons = ReadLeagueSeasons(config.LeagueDataParentFolder);
             LeagueCupGames = ReadCupGames(config.LeagueCupFilePath);

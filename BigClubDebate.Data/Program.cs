@@ -5,6 +5,7 @@ using System.Linq;
 using BigClubDebate.Data.Model;
 using BigClubDebate.Data.Model.DataSources;
 using BigClubDebate.Data.Model.DataTypes;
+using BigClubDebate.Data.Model.Reader;
 
 namespace BigClubDebate.Data
 {
@@ -16,7 +17,7 @@ namespace BigClubDebate.Data
         {
             var path = Path.Combine(Directory.GetCurrentDirectory(), "..", "..", "..", "..", "content", "GameData");
 
-            var openFootballEnglishLeagueReader = new OpenFootballEnglishLeagueReader(new FootballDataFolderConfig(path));
+            var openFootballEnglishLeagueReader = new FootyDataReader(new FootballDataFolderConfig(path));
 
             var leagueGames = openFootballEnglishLeagueReader.LeagueSeasons;
             var facup = openFootballEnglishLeagueReader.FaCupGames;

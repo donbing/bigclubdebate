@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using BigClubDebate.Data.Model.DataTypes;
+using BigClubDebate.Data.Model.Reader;
 
 namespace BigClubDebate.Data.Model.DataSources
 {
@@ -14,7 +15,7 @@ namespace BigClubDebate.Data.Model.DataSources
 
         public ILookup<string, List<string>> LeagueCupTables { get; }
 
-        public CupGames(OpenFootballEnglishLeagueReader data)
+        public CupGames(FootyDataReader data)
         {
             FaCupGames = data.FaCupGames; 
             LeagueCupGames = data.LeagueCupGames;

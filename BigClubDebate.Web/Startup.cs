@@ -6,6 +6,7 @@ using System.Reflection;
 using System.Threading.Tasks;
 using BigClubDebate.Data;
 using BigClubDebate.Data.Model.DataSources;
+using BigClubDebate.Data.Model.Reader;
 using BigClubDebate.Web.Data;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Components;
@@ -32,7 +33,7 @@ namespace BigClubDebate.Web
             services.AddRazorPages();
             services.AddServerSideBlazor();
             services.AddSingleton(s => FootballDataFolderConfig.FromEntryAssemblyPath());
-            services.AddSingleton<OpenFootballEnglishLeagueReader>();
+            services.AddSingleton<FootyDataReader>();
             services.AddSingleton<Teams>();
             services.AddSingleton<WittyTagLineGenerator>();
             services.AddSingleton<LeagueGames>();

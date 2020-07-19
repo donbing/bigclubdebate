@@ -1,7 +1,7 @@
 ﻿using System.IO;
 using System.Reflection;
 
-namespace BigClubDebate.Data
+namespace BigClubDebate.Data.Model.Reader
 {
     public class FootballDataFolderConfig
     {

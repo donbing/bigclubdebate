@@ -13,6 +13,7 @@ namespace BigClubDebate.Data
         public TeamName ManCity = new TeamName(new[] { "Manchester City FC", "Man City", "Manchester City" }, "manc_logo.png", "manc_background.jpg");
         public TeamName LeicesterCity = new TeamName(new[] { "Leicester City FC", "The Foxes", "Manchester City" }, "Leicester_logo.png", "Leicester_background.jpg");
         public TeamName Liverpool = new TeamName(new[] { "Liverpool FC", "The Reds", "Liverpool" }, "Liverpool_logo.png", "Liverpool_background.jpg");
+        public TeamName Everton = new TeamName(new[] { "Everton FC", "The Toffees", "Everton" }, "Everton_logo.png", "Everton_background.jpg");
 
         public Teams()
         {
