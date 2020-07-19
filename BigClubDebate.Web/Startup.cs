@@ -5,6 +5,7 @@ using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
 using BigClubDebate.Data;
+using BigClubDebate.Data.Model.DataSources;
 using BigClubDebate.Web.Data;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Components;
@@ -30,11 +31,12 @@ namespace BigClubDebate.Web
         {
             services.AddRazorPages();
             services.AddServerSideBlazor();
-            services.AddSingleton(s => new OpenFootballEnglishLeagueReader(Path.Combine(Path.GetDirectoryName(Assembly.GetEntryAssembly().Location), "GameData")));
+            services.AddSingleton(s => FootballDataFolderConfig.FromEntryAssemblyPath());
+            services.AddSingleton<OpenFootballEnglishLeagueReader>();
             services.AddSingleton<Teams>();
             services.AddSingleton<WittyTagLineGenerator>();
-            services.AddSingleton<LeagueData>();
-            services.AddSingleton<CupData>();
+            services.AddSingleton<LeagueGames>();
+            services.AddSingleton<CupGames>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

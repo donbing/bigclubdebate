@@ -16,7 +16,7 @@ namespace BigClubDebate.Data
         {
             var path = Path.Combine(Directory.GetCurrentDirectory(), "..", "..", "..", "..", "content", "GameData");
 
-            var openFootballEnglishLeagueReader = new OpenFootballEnglishLeagueReader(path);
+            var openFootballEnglishLeagueReader = new OpenFootballEnglishLeagueReader(new FootballDataFolderConfig(path));
 
             var leagueGames = openFootballEnglishLeagueReader.LeagueSeasons;
             var facup = openFootballEnglishLeagueReader.FaCupGames;

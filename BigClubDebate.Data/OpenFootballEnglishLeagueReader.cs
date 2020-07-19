@@ -11,29 +11,24 @@ namespace BigClubDebate.Data
 {
     public class OpenFootballEnglishLeagueReader 
     {
-        readonly string dataFolderPath;
-        string FaCupFilePath => Path.Combine(dataFolderPath, "facup.csv.txt");
-        string LeagueDataParentFolder => Path.Combine(dataFolderPath, "england-master");
-        string LeagueCupFilePath => Path.Combine(dataFolderPath, "leaguecup.csv.txt");
+        public readonly IList<CupGame> FaCupGames;
+        public readonly IList<CupGame> LeagueCupGames;
+        public readonly IList<Season> LeagueSeasons;
 
-        public IList<CupGame> FaCupGames;
-
-        public IList<CupGame> LeagueCupGames;
-
-        public IList<Season> LeagueSeasons;
-
-        public OpenFootballEnglishLeagueReader(string path)
+        public OpenFootballEnglishLeagueReader(FootballDataFolderConfig config)
         {
-            dataFolderPath = path;
+            LeagueSeasons = ReadLeagueSeasons(config.LeagueDataParentFolder);
+            LeagueCupGames = ReadCupGames(config.LeagueCupFilePath);
+            FaCupGames = ReadCupGames(config.FaCupFilePath);
+        }
 
-            LeagueSeasons = Directory
-                .EnumerateDirectories(LeagueDataParentFolder, "????-??", SearchOption.AllDirectories)
+        static List<Season> ReadLeagueSeasons(string leagueDataParentFolder)
+        {
+            return Directory
+                .EnumerateDirectories(leagueDataParentFolder, "????-??", SearchOption.AllDirectories)
                 .Select(ReadFilesForYearFolder)
                 .OrderBy(x => x.Name)
                 .ToList();
-
-            LeagueCupGames = ReadCupGames(LeagueCupFilePath);
-            FaCupGames = ReadCupGames(FaCupFilePath);
         }
 
         static List<CupGame> ReadCupGames(string csvFilePath) =>
