@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using BigClubDebate.Data.Model.DataTypes;
@@ -7,82 +8,94 @@ namespace BigClubDebate.Data.Model
 {
     public class TeamStats
     {
-        public TeamName name;
-        private IEnumerable<Game> games;
-        private readonly ILookup<string, List<string>> tables;
+        public TeamName Name { get; set; }
+        readonly IEnumerable<Game> teamsGames;
+        readonly ILookup<string, List<string>> tables;
 
-        public TeamStats(TeamName teamName, IEnumerable<Game> games, ILookup<string, List<string>> tables)
+        public TeamStats(TeamName teamName, IEnumerable<Game> allCompetitionGames, ILookup<string, List<string>> tables)
         {
-            this.name = teamName;
-            var enumerable = games.ToList();
-            this.games = enumerable.Where(g => name.Matches(g.Away) || name.Matches(g.Home)).ToList();
+            Name = teamName;
+            teamsGames = allCompetitionGames.Where(Name.PlayedIn).ToList();
             this.tables = tables;
         }
+
         public int Games
-            => games.Count();
+            => teamsGames.Count();
 
         public int Wins
-            => games.Where(g => name.Matches(g.Winner)).Count();
+            => teamsGames.Count(g => Name.Matches(g.Winner));
 
         public int CleanWins
-            => games.Where(g => name.Matches(g.Winner) && g.GoalsAgainst(g.Winner) == 0).Count();
+            => teamsGames.Count(g => Name.Matches(g.Winner) && g.GoalsAgainst(g.Winner) == 0);
 
         public int AwayWins
-            => games.Where(g => name.Matches(g.Winner) && name.Matches(g.Away)).Count();
+            => teamsGames.Count(g => Name.Matches(g.Winner) && Name.Matches(g.Away));
 
         public int WonBy5OrMore
-            => games.Where(g => name.Matches(g.Winner) && g.GoalsFor(g.Winner) - g.GoalsAgainst(g.Winner) >= 5).Count();
+            => teamsGames.Count(g => Name.Matches(g.Winner) && g.GoalsFor(g.Winner) - g.GoalsAgainst(g.Winner) >= 5);
 
         public int Losses
-            => games.Where(g => name.Matches(g.Loser)).Count();
+            => teamsGames.Count(g => Name.Matches(g.Loser));
 
         public int Draws
-            => games.Where(g => g.Drawn).Count();
+            => teamsGames.Count(g => g.Drawn);
         public int NoScoreDraws
-            => games.Where(g => g.Drawn).Where(g => g.TotalGoals == 0).Count();
+            => teamsGames.Where(g => g.Drawn).Count(g => g.TotalGoals == 0);
         public int AwayDraws
-            => games.Where(g => g.Drawn).Where(g => name.Matches(g.Away)).Count();
+            => teamsGames.Where(g => g.Drawn).Count(g => Name.Matches(g.Away));
 
         public int Goals
-            => games.Sum(x => x.GoalsFor(name.ToArray()));
+            => teamsGames.Sum(x => x.GoalsFor(Name.ToArray()));
         public int AwayGoals
-            => games.Where(g => name.Matches(g.Away)).Select(g => g.GoalsFor(name.ToArray())).Sum();
+            => teamsGames.Where(g => Name.Matches(g.Away)).Select(g => g.GoalsFor(Name.ToArray())).Sum();
         public int MostGoalsInOneGame
-            => games.Select(g => g.GoalsFor(name.ToArray())).DefaultIfEmpty().Max();
+            => teamsGames.Select(g => g.GoalsFor(Name.ToArray())).DefaultIfEmpty().Max();
         public int GoalsInLast10Years
-            => games.Where(g => g.Date.Year >= DateTime.UtcNow.AddYears(-10).Year).Sum(x => x.GoalsFor(name.ToArray()));
+            => teamsGames.Where(g => g.Date.Year >= DateTime.UtcNow.AddYears(-10).Year).Sum(x => x.GoalsFor(Name.ToArray()));
 
         public int CleanSheets
-            => games.Count(g => g.GoalsAgainst(name.ToArray()) == 0);
+            => teamsGames.Count(g => g.GoalsAgainst(Name.ToArray()) == 0);
 
         public int Conceded
-            => games.Sum(x => x.GoalsAgainst(name.ToArray()));
+            => teamsGames.Sum(x => x.GoalsAgainst(Name.ToArray()));
+
+        public DateTime? CompetitionStart
+            => teamsGames
+                .OrderBy(x => x.Date)
+                .Take(1)
+                .Select(x => new DateTime(int.Parse(x.Season),1,1))
+                .FirstOrDefault();
 
         public int? CompetitionWins 
-            => tables?.SelectMany(t => t).Count(t => name.Matches(t[0]));
-        public DateTime CompetitionStart => games
-            .Select(x => x.Date)
-            .OrderBy(x => x)
-            .First();
+            => tables?
+                .SelectMany(t => t)
+                .Count(t => Name.Matches(t[0]));
 
-        public int? RunnersUp => tables?.SelectMany(t => t).Count(t => name.Matches(t[1]));
+        public int? RunnersUp 
+            => tables?
+                .SelectMany(t => t)
+                .Count(t => Name.Matches(t[1]));
 
-        public int? Years => tables?.SelectMany(t => t).Count(t => t.Any(c => name.Matches(c)));
+        public int? Years 
+            => tables?
+                .SelectMany(t => t)
+                .Count(t => t.Any(Name.Matches));
+
         public int CompetitionWinsInLast10Years 
             => tables
                 .Where(t=> (DateTime.UtcNow.Year - int.Parse(t.Key)) <= 10)
                 .SelectMany(t => t)
-                .Count(t => name.Matches(t[0]));
+                .Count(t => Name.Matches(t[0]));
 
         public string LastCompetitionWinDate =>
             tables
-                .Where(seasons => seasons.Any(table => name.Matches(table[0])))
+                .Where(seasons => seasons.Any(table => Name.Matches(table[0])))
                 .Max(x => x.Key);
 
         public int CompetitionEntriesInLast10Years =>
             tables
                 .Where(t => (DateTime.UtcNow.Year - int.Parse(t.Key)) <= 10)
                 .SelectMany(t => t)
-                .Count(t => t.Any(name.Matches));
+                .Count(t => t.Any(Name.Matches));
     }
 }

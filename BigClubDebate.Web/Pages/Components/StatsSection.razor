@@ -1,0 +1,90 @@
+﻿@using BigClubDebate.Data
+@using BigClubDebate.Data.Model
+@using BigClubDebate.Data.Model.DataSources
+@using BigClubDebate.Data.Model.DataTypes
+
+@inject LeagueGames LeagueData
+@inject CupGames CupData
+
+@if(team1 != null && team2 != null && Datesfilter != null)
+{
+    <section class="stats-section fw-block" style="margin-bottom: 25px;">
+
+        <div class="year-bar fw-block stats-header">
+            @if (Team1.CompetitionStart.HasValue)
+            {
+                <p class="stats team1">
+                    est
+                    <input class="year" @bind="@Datesfilter.Est1" @bind:format="yyyy"/>
+                </p>
+            }
+            @if (Team2.CompetitionStart.HasValue)
+            {
+                <p class="stats team2">
+                    est
+                    <input id="Boop" class="year" @bind="@Datesfilter.Est2" @bind:format="yyyy"/>
+                </p>
+            }
+            <h2>@SectionName</h2>
+        </div>
+        <div class="fw-block has-full-stats">
+            <div class="stats-block-wrap fw-block all-comps @MoreInfo">
+                @ChildContent
+            </div>
+            @if (Expandable)
+            {
+                <div class="moreInfoBar" @onclick="MoreClicked">
+                    <img height="40px" src="images/DownArrow.png"/>
+                </div>
+            }
+        </div>
+    </section>
+}
+else
+{
+    <p>Loading..</p>
+}
+
+@code {
+    [Parameter]
+    public DatesFilter Datesfilter { get; set; } 
+
+    TeamStats team1,team2;
+    
+    [ParameterAttribute]
+    public TeamStats Team1
+    {
+        get => team1;
+        set
+        {
+            team1 = value;
+        }
+    }
+
+    [ParameterAttribute]
+    public TeamStats Team2
+    {
+        get => team2;
+        set
+        {
+            team2 = value;
+        }
+    }
+
+    [Parameter]
+    public bool Expandable { get; set; } = true;
+
+    [Parameter]
+    public string SectionName { get; set; }
+
+    [Parameter]
+    public RenderFragment ChildContent { get; set; }
+
+    public string moreInfo { get; set; } = "more";
+    public string MoreInfo => Expandable ? moreInfo : "";
+    
+    void MoreClicked(MouseEventArgs e)
+    {
+        moreInfo = Expandable ? moreInfo == "more" ? "less" : "more" : "";
+    }
+}

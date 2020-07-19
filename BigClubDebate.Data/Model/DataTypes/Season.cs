@@ -7,17 +7,17 @@ namespace BigClubDebate.Data.Model.DataTypes
 {
     public class Season : IEnumerable<Game>
     {
-        public IEnumerable<Division> Divisions { get; set; }
+        public IEnumerable<DivisionSeason> Divisions { get; set; }
         
         public string Name;
 
-        public Season(string yearName, IEnumerable<Division> leagues) 
+        public Season(string yearName, IEnumerable<DivisionSeason> leagues) 
         { 
             Name = yearName;
             Divisions = leagues;
         }
 
-        public Division GetDivision(int division) 
+        public DivisionSeason GetDivision(int division) 
             => Divisions.First(x => x.DivisionPriority == division);
 
         public IEnumerator<Game> GetEnumerator()

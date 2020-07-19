@@ -25,10 +25,9 @@ namespace BigClubDebate.Data
             var utd = new TeamStats(Teams.SheffUtd, facup, Standings(facup));
             var weds = new TeamStats(Teams.SheffWeds, facup, Standings(facup));
 
-
-            Console.WriteLine($"{utd.name} wins:{utd.CompetitionWins}");
-            Console.WriteLine($"{utd.name} wins:{utd.LastCompetitionWinDate}");
-            Console.WriteLine($"{weds.name} wins:{weds.CompetitionWins}");
+            Console.WriteLine($"{utd.Name} wins:{utd.CompetitionWins}");
+            Console.WriteLine($"{utd.Name} wins:{utd.LastCompetitionWinDate}");
+            Console.WriteLine($"{weds.Name} wins:{weds.CompetitionWins}");
 
             //ShowStats(utd, weds);
 
@@ -45,32 +44,32 @@ namespace BigClubDebate.Data
 
         private static void ShowStats(TeamStats utd, TeamStats weds)
         {
-            Console.WriteLine($"{utd.name} wins:{utd.Wins}");
-            Console.WriteLine($"{weds.name} wins:{weds.Wins}");
+            Console.WriteLine($"{utd.Name} wins:{utd.Wins}");
+            Console.WriteLine($"{weds.Name} wins:{weds.Wins}");
 
-            Console.WriteLine($"{utd.name} goals:{utd.Goals}");
-            Console.WriteLine($"{weds.name} goals:{weds.Goals}");
+            Console.WriteLine($"{utd.Name} goals:{utd.Goals}");
+            Console.WriteLine($"{weds.Name} goals:{weds.Goals}");
 
-            Console.WriteLine($"{utd.name} Conceded:{utd.Conceded}");
-            Console.WriteLine($"{weds.name} Conceded:{weds.Conceded}");
+            Console.WriteLine($"{utd.Name} Conceded:{utd.Conceded}");
+            Console.WriteLine($"{weds.Name} Conceded:{weds.Conceded}");
 
-            Console.WriteLine($"{utd.name} c/sheets:{utd.CleanSheets}");
-            Console.WriteLine($"{weds.name} c/sheets:{weds.CleanSheets}");
+            Console.WriteLine($"{utd.Name} c/sheets:{utd.CleanSheets}");
+            Console.WriteLine($"{weds.Name} c/sheets:{weds.CleanSheets}");
 
-            Console.WriteLine($"{utd.name} lost:{utd.Losses}");
-            Console.WriteLine($"{weds.name} lost:{weds.Losses}");
+            Console.WriteLine($"{utd.Name} lost:{utd.Losses}");
+            Console.WriteLine($"{weds.Name} lost:{weds.Losses}");
 
-            Console.WriteLine($"{utd.name} drawn:{utd.Draws}");
-            Console.WriteLine($"{weds.name} drawn:{weds.Draws}");
+            Console.WriteLine($"{utd.Name} drawn:{utd.Draws}");
+            Console.WriteLine($"{weds.Name} drawn:{weds.Draws}");
 
-            Console.WriteLine($"{utd.name} won:{utd.CompetitionWins}");
-            Console.WriteLine($"{weds.name} won:{weds.CompetitionWins}");
+            Console.WriteLine($"{utd.Name} won:{utd.CompetitionWins}");
+            Console.WriteLine($"{weds.Name} won:{weds.CompetitionWins}");
 
-            Console.WriteLine($"{utd.name} runner up:{utd.RunnersUp}");
-            Console.WriteLine($"{weds.name} runner up:{weds.RunnersUp}");
+            Console.WriteLine($"{utd.Name} runner up:{utd.RunnersUp}");
+            Console.WriteLine($"{weds.Name} runner up:{weds.RunnersUp}");
 
-            Console.WriteLine($"{utd.name} years:{utd.Years}");
-            Console.WriteLine($"{weds.name} years:{weds.Years}");
+            Console.WriteLine($"{utd.Name} years:{utd.Years}");
+            Console.WriteLine($"{weds.Name} years:{weds.Years}");
         }
     }
 }

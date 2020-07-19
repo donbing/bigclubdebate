@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using BigClubDebate.Data.Model.DataTypes;
@@ -7,20 +8,43 @@ namespace BigClubDebate.Data.Model.DataSources
 {
     public class CupGames
     {
-        public IEnumerable<CupGame> FaCupGames { get; }
+        readonly IEnumerable<CupGame> leagueCupGames;
+        readonly ILookup<string, List<string>> _leagueCupTables;
+        readonly IEnumerable<CupGame> _faCupGames;
+        readonly ILookup<string, List<string>> _faCupTables;
 
-        public IEnumerable<CupGame> LeagueCupGames { get; }
+        public IEnumerable<CupGame> GetFaCupGames(DateTime? startDate = null)
+        {
+            return _faCupGames
+                .Where(x => !startDate.HasValue || x.Date >= startDate);
+        }
 
-        public ILookup<string, List<string>> FaCupTables { get; }
+        public IEnumerable<CupGame> GetLeagueCupGames(DateTime? startDate)
+        {
+            return leagueCupGames
+                .Where(x => !startDate.HasValue || x.Date >= startDate);
+        }
 
-        public ILookup<string, List<string>> LeagueCupTables { get; }
+        public ILookup<string, List<string>> GetFaCupTables(DateTime? startDate)
+        {
+            return _faCupTables
+                .Where(x => !startDate.HasValue || int.Parse(x.Key) >= startDate.Value.Year)
+                .ToLookup(x => x.Key, x => x.SelectMany(y => y).ToList());
+        }
+
+        public ILookup<string, List<string>> GetLeagueCupTables(DateTime? startDate)
+        {
+            return _leagueCupTables
+                .Where(x => !startDate.HasValue || int.Parse(x.Key) >= startDate.Value.Year)
+                .ToLookup(x => x.Key, x=> x.SelectMany(y => y).ToList());
+        }
 
         public CupGames(FootyDataReader data)
         {
-            FaCupGames = data.FaCupGames; 
-            LeagueCupGames = data.LeagueCupGames;
-            FaCupTables = GetSeasonsTables(FaCupGames);
-            LeagueCupTables = GetSeasonsTables(LeagueCupGames);
+            _faCupGames = data.FaCupGames; 
+            leagueCupGames = data.LeagueCupGames;
+            _faCupTables = GetSeasonsTables(GetFaCupGames());
+            _leagueCupTables = GetSeasonsTables(leagueCupGames);
         }
 
         static ILookup<string, List<string>> GetSeasonsTables(IEnumerable<CupGame> cupGames) =>

@@ -5,3 +5,13 @@
         @Body
     </div>
 </div>
+@code {
+    [Inject]
+    protected IJSRuntime JsRuntime { get; set; }
+
+    protected override void OnAfterRender(bool firstRender)
+    {
+        if (firstRender)
+            JsRuntime.InvokeVoidAsync("onBlazorReady");
+    }
+}

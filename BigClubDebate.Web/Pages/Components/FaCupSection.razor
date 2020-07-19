@@ -1,0 +1,40 @@
+﻿@using BigClubDebate.Data
+@using BigClubDebate.Data.Model
+@using BigClubDebate.Data.Model.DataSources
+@using BigClubDebate.Data.Model.DataTypes
+
+@inject CupGames CupData
+
+<StatsSection SectionName="FA Cup" Team1="Team1"  Team2="Team2" Datesfilter="Datesfilter">
+    <CompetitionResults Team1="Team1" Team2="Team2"></CompetitionResults>
+    <GameResults Team1="Team1" Team2="Team2"></GameResults>
+    <GoalResults Team1="Team1" Team2="Team2"></GoalResults>
+</StatsSection>
+
+@code {
+    public DatesFilter Datesfilter { get; set; } 
+    public TeamStats Team1 { get; set; }
+    public TeamStats Team2 { get; set; }
+
+    [Parameter]
+    public TeamName Team1Name { get; set; }
+
+    [Parameter]
+    public TeamName Team2Name { get; set; }
+    
+    protected override void OnParametersSet()
+    {
+        Datesfilter = new DatesFilter(LoadGames);
+        LoadGames();
+    }
+
+    void LoadGames()
+    {
+        (Team1, Team2) = CreateTeamsStats(CupData.GetFaCupGames(Datesfilter.Est1), CupData.GetFaCupTables(Datesfilter.Est1));
+        Datesfilter = new DatesFilter(LoadGames, Team1.CompetitionStart, Team2.CompetitionStart);
+        StateHasChanged();
+    }
+
+    (TeamStats, TeamStats) CreateTeamsStats(IEnumerable<Game>games, ILookup<string, List<string>> seasonsTables = null) 
+        => (new TeamStats(Team1Name, games, seasonsTables), new TeamStats(Team2Name, games, seasonsTables));
+}

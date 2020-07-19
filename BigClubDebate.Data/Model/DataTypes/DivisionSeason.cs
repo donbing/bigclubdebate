@@ -4,9 +4,10 @@ using System.Collections.Generic;
 
 namespace BigClubDebate.Data.Model.DataTypes
 {
-    public class Division : IEnumerable<Game>
+    public class DivisionSeason : IEnumerable<Game>
     {
         public string Year { get; set; }
+        public DateTime StartDate => new DateTime(int.Parse(Year), 08, 01);
         public string DivisionName { get; set; }
         public int DivisionPriority { get; set; }
         public IEnumerable<Game> Games { get; set; }

@@ -1,0 +1,44 @@
+﻿@using BigClubDebate.Data
+@using BigClubDebate.Data.Model
+@using BigClubDebate.Data.Model.DataSources
+@using BigClubDebate.Data.Model.DataTypes
+
+@inject LeagueGames LeagueData
+
+    <StatsSection SectionName="Division 1 / Premiership" Team1="Team1" Team2="Team2" Datesfilter="Datesfilter">
+        <CompetitionResults Team1="Team1" Team2="Team2">
+            @*<ul class="middle_opts">
+                <li><a title="Players" href="#playersModal"><img width="40px" src="images/player.png" /><div class="extraStats">foo</div></a></li>
+                <li><a title="League Positions"><img width="40px" src="images/graph.png" title="League Positions" /></a></li>
+                <li><a title="Transfers"><img width="40px" src="images/transfer.png" title="Transfers" /></a></li>
+            </ul>*@
+        </CompetitionResults>
+        <GameResults Team1="Team1" Team2="Team2"></GameResults>
+        <GoalResults Team1="Team1" Team2="Team2"></GoalResults>
+    </StatsSection>
+
+@code {
+    public DatesFilter Datesfilter { get; set; } 
+    public TeamStats Team1 { get; set; }
+    public TeamStats Team2 { get; set; }
+
+    [Parameter]
+    public TeamName Team1Name { get; set; }
+
+    [Parameter]
+    public TeamName Team2Name { get; set; }
+    
+    protected override void OnParametersSet()
+    {
+        LoadGames();
+    }
+
+    void LoadGames()
+    {
+        var games = LeagueData.DivisionGames(1, Datesfilter?.Est1);
+        var seasonsTables = LeagueData.DivisionTables(1, Datesfilter?.Est1);
+        (Team1, Team2) = (new TeamStats(Team1Name, games, seasonsTables), new TeamStats(Team2Name, games, seasonsTables));
+        Datesfilter = new DatesFilter(LoadGames, Team1.CompetitionStart, Team2.CompetitionStart);
+        StateHasChanged();
+    }
+}

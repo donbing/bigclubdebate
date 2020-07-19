@@ -77,7 +77,7 @@ namespace BigClubDebate.Data.Model.Reader
         }
 
         const string LeagueYearFileNamePattern = @"^(\d)-(.*).txt";
-        static Division ReadYearFromFilePath(string filePath, string year)
+        static DivisionSeason ReadYearFromFilePath(string filePath, string year)
         {
             var fileInfo = new FileInfo(filePath);
             var fileNameMatch = Regex.Match(fileInfo.Name, LeagueYearFileNamePattern);
@@ -88,7 +88,7 @@ namespace BigClubDebate.Data.Model.Reader
             return ReadSeasonFromText(priority, leagueName, File.ReadAllText(fileInfo.FullName), year);
         }
 
-        static Division ReadSeasonFromText(int priority, string name, string fileText, string season)
+        static DivisionSeason ReadSeasonFromText(int priority, string name, string fileText, string season)
         {
             var fileLines = fileText.Split(new[] { "\n", "\r\n" }, StringSplitOptions.RemoveEmptyEntries);
             var games = new List<Game>();
@@ -97,7 +97,7 @@ namespace BigClubDebate.Data.Model.Reader
             {
                 if (line.StartsWith("["))
                 {
-                    date = GetDate(season, line);
+                    date = GuessGameDate(season, line);
 
                 }
                 var gameMatch = Regex.Match(line, @"^  (.*)(\d)-(\d)(.*)");
@@ -116,7 +116,7 @@ namespace BigClubDebate.Data.Model.Reader
                 .Select(ParseFixtureFrom)
                 .ToList();
 
-            return new Division
+            return new DivisionSeason
             {
                 DivisionPriority = priority,
                 DivisionName = name,
@@ -126,7 +126,7 @@ namespace BigClubDebate.Data.Model.Reader
             };
         }
 
-        static DateTime GetDate(string season, string line)
+        static DateTime GuessGameDate(string season, string line)
         {
             var dateLine = line.Replace("[", "").Replace("]", "") + "/";
             return DateTime.TryParseExact(dateLine + season, "ddd MMM/d/yyyy", CultureInfo.CurrentCulture, DateTimeStyles.None, out var date1)

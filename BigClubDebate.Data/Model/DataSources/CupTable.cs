@@ -24,7 +24,7 @@ namespace BigClubDebate.Data.Model.DataSources
             if (final == null)
             {
                 var c = seasonsCupGames.Select(x => x.Type).Distinct();
-                throw new Exception();
+                throw new Exception("cant find cup final");
             }
             // dirty hac to not deal with replays, 2leg games and other shenanigans
             var winners = new[] { final.Winner, final.Loser };

@@ -1,0 +1,37 @@
+﻿@using BigClubDebate.Data.Model
+@using BigClubDebate.Data.Model.DataSources
+@using BigClubDebate.Data.Model.DataTypes
+
+@inject LeagueGames LeagueData
+
+    <StatsSection SectionName="Head to Head" Expandable="false" Team1="Team1" Team2="Team2" Datesfilter="Datesfilter">
+        <GameResults Team1="Team1" Team2="Team2">
+            <p>League Games</p>
+        </GameResults>
+    </StatsSection>
+
+@code {
+    public DatesFilter Datesfilter { get; set; } 
+    
+    public TeamStats Team1 { get; set; }
+    public TeamStats Team2 { get; set; }
+
+    [Parameter]
+    public TeamName Team1Name { get; set; }
+
+    [Parameter]
+    public TeamName Team2Name { get; set; }
+
+    protected override void OnParametersSet()
+    {
+        LoadGames();
+    }
+
+    void LoadGames()
+    {
+        var games = LeagueData.HeadToHeadGames(Team1Name, Team2Name, Datesfilter?.Est1);
+        (Team1, Team2) = (new TeamStats(Team1Name, games, null), new TeamStats(Team2Name, games, null));
+        Datesfilter = new DatesFilter(LoadGames, Team1.CompetitionStart, Team2.CompetitionStart);
+        StateHasChanged();
+    }
+}
