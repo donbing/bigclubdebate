@@ -13,7 +13,8 @@ namespace BigClubDebate.Data.Model
         public TeamStats(TeamName teamName, IEnumerable<Game> games, ILookup<string, List<string>> tables)
         {
             this.name = teamName;
-            this.games = games.Where(g => name.Matches(g.Away) || name.Matches(g.Home)).ToList();
+            var enumerable = games.ToList();
+            this.games = enumerable.Where(g => name.Matches(g.Away) || name.Matches(g.Home)).ToList();
             this.tables = tables;
         }
         public int Games
@@ -48,7 +49,7 @@ namespace BigClubDebate.Data.Model
         public int MostGoalsInOneGame
             => games.Select(g => g.GoalsFor(name.ToArray())).DefaultIfEmpty().Max();
         public int GoalsInLast10Years
-            => games.Where(g => g.Date.Value.Year >= DateTime.UtcNow.AddYears(-10).Year).Sum(x => x.GoalsFor(name.ToArray()));
+            => games.Where(g => g.Date.Year >= DateTime.UtcNow.AddYears(-10).Year).Sum(x => x.GoalsFor(name.ToArray()));
 
         public int CleanSheets
             => games.Count(g => g.GoalsAgainst(name.ToArray()) == 0);
@@ -56,17 +57,16 @@ namespace BigClubDebate.Data.Model
         public int Conceded
             => games.Sum(x => x.GoalsAgainst(name.ToArray()));
 
-        public int CompetitionWins 
-            => tables.SelectMany(t => t).Count(t => name.Matches(t[0]));
-        public DateTime? CompetitionStart => games
+        public int? CompetitionWins 
+            => tables?.SelectMany(t => t).Count(t => name.Matches(t[0]));
+        public DateTime CompetitionStart => games
             .Select(x => x.Date)
             .OrderBy(x => x)
-            .Take(1)
-            .Min();
+            .First();
 
-        public int RunnersUp => tables.SelectMany(t => t).Count(t => name.Matches(t[1]));
+        public int? RunnersUp => tables?.SelectMany(t => t).Count(t => name.Matches(t[1]));
 
-        public int Years => tables.SelectMany(t => t).Count(t => t.Any(c => name.Matches(c)));
+        public int? Years => tables?.SelectMany(t => t).Count(t => t.Any(c => name.Matches(c)));
         public int CompetitionWinsInLast10Years 
             => tables
                 .Where(t=> (DateTime.UtcNow.Year - int.Parse(t.Key)) <= 10)
@@ -75,7 +75,7 @@ namespace BigClubDebate.Data.Model
 
         public string LastCompetitionWinDate =>
             tables
-                .Where(t => t.Any(table => name.Matches(table[0])))
+                .Where(seasons => seasons.Any(table => name.Matches(table[0])))
                 .Max(x => x.Key);
 
         public int CompetitionEntriesInLast10Years =>

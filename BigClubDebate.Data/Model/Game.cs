@@ -5,7 +5,8 @@ namespace BigClubDebate.Data.Model
 {
     public class Game : Fixture
     {
-        public DateTime? Date { get; set; }
+        public DateTime Date { get; set; }
+        public string Season { get; set; }
 
         public int HomeGoals { get; set; }
         public int AwayGoals { get; set; }

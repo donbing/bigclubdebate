@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using BigClubDebate.Data.Model;
@@ -11,21 +12,33 @@ namespace BigClubDebate.Data
 
         static void Main(string[] args)
         {
-            var path = Path.Combine(Directory.GetCurrentDirectory(), "GameData");
+            var path = Path.Combine(Directory.GetCurrentDirectory(), "..", "..", "..", "..", "content", "GameData");
 
             var openFootballEnglishLeagueReader = new OpenFootballEnglishLeagueReader(path);
 
-            var leagueGames = openFootballEnglishLeagueReader.LeagueYears;
+            var leagueGames = openFootballEnglishLeagueReader.LeagueSeasons;
             var facup = openFootballEnglishLeagueReader.FaCupGames;
 
-            var utd = new TeamStats(Teams.team5, facup, null);
-            var weds = new TeamStats(Teams.team6, facup, null);
+            var utd = new TeamStats(Teams.SheffUtd, facup, Standings(facup));
+            var weds = new TeamStats(Teams.SheffWeds, facup, Standings(facup));
 
-            ShowStats(utd, weds);
+
+            Console.WriteLine($"{utd.name} wins:{utd.CompetitionWins}");
+            Console.WriteLine($"{utd.name} wins:{utd.LastCompetitionWinDate}");
+            Console.WriteLine($"{weds.name} wins:{weds.CompetitionWins}");
+
+            //ShowStats(utd, weds);
 
             //Console.WriteLine(string.Join(Environment.NewLine, facup));
             //DisplayD1Data(years, team1, team2);
         }
+
+        public static ILookup<string, List<string>> Standings(IEnumerable<CupGame> cupGames) =>
+            cupGames.GroupBy(x => x.Season)
+                .ToLookup(
+                    year => year.Key,
+                    year => new CupTable(year).ToList()
+                );
 
         private static void ShowStats(TeamStats utd, TeamStats weds)
         {

@@ -1,85 +1,110 @@
 ﻿@page "/"
 
-@using BigClubDebate.Web.Pages;
 @using BigClubDebate.Data
+@using BigClubDebate.Web.Pages
 @using BigClubDebate.Data.Model
+@using BigClubDebate.Web.Data
 
-@inject BigClubDebate.Web.Data.WeatherForecastService ForecastService
-@inject IJSRuntime JSRuntime
+@inject BigClubDebate.Web.Data.LeagueData LeagueData
+@inject WittyTagLineGenerator;
+@inject BigClubDebate.Web.Data.CupData CupData
+@inject IJSRuntime JsRuntime
 
 @if (div1 == default)
 {
-    <p><em>Loading...</em></p>
+<p><em>Loading...</em></p>
 }
 else
 {
-    <div class="background">
-        <section class="masthead fw-block" style="margin-top: 82px;">
-            <div class="container">
-                <p>a statistics website to determine, once and for all who is the bigger club</p>
-                <br />
-                <h1>
-                    <select id="team1Select" @bind="team1Name">
-                        @foreach (var team in teams.ToList())
+<section class="masthead fw-block" style="margin-top: 82px;">
+    <div class="container">
+        <p>a statistics website to determine, once and for all who is the bigger club</p>
+        <br />
+        <h1>
+            <select id="team1Select" @bind="Team1Name">
+                @foreach (var team in teams.ToList())
                         {
-                            <option value="@team.MainName" disabled="@(team2Name == team.MainName)">@team.SlangName</option>
+                <option value="@team.MainName" disabled="@(Team2Name == team.MainName)">@team.NickName</option>
                         }
-                    </select>
-                    <span>VS</span>
-                    <select id="team2Select" @bind="team2Name">
-                        @foreach (var team in teams.ToList())
+            </select>
+            <span>VS</span>
+            <select id="team2Select" @bind="Team2Name">
+                @foreach (var team in teams.ToList())
                         {
-                            <option value="@team.MainName" disabled="@(team1Name == team.MainName)">@team.SlangName</option>
+                <option value="@team.MainName" disabled="@(Team1Name == team.MainName)">@team.NickName</option>
                         }
-                    </select>
-                </h1>
-                <img class="main-img team1" src="images/@team1.ImageName" alt="@team1.MainName Logo" />
-                <img class="main-img team2" src="images/@team2.ImageName" alt="@team2.MainName Logo" />
-                <p class="tagline">@tagLine</p>
-            </div>
-        </section>
-
-        <StatsSection SectionName="Head to Head" Expandable="false" Team1="head2head.Item1" Team2="head2head.Item2">
-            <GameResults Team1="head2head.Item1" Team2="head2head.Item2">
-                <p>League Games</p>
-            </GameResults>
-        </StatsSection>
-
-        <StatsSection SectionName="Division 1 / Premiership" Team1="div1.Item1" Team2="div1.Item2">
-            <CompetitionResults Team1="div1.Item1" Team2="div1.Item2">
-                @*<ul class="middle_opts">
-                        <li><a title="Players" href="#playersModal"><img width="40px" src="images/player.png" /><div class="extraStats">foo</div></a></li>
-                        <li><a title="League Positions"><img width="40px" src="images/graph.png" title="League Positions" /></a></li>
-                        <li><a title="Transfers"><img width="40px" src="images/transfer.png" title="Transfers" /></a></li>
-                    </ul>*@
-            </CompetitionResults>
-            <GameResults Team1="div1.Item1" Team2="div1.Item2"></GameResults>
-            <GoalResults Team1="div1.Item1" Team2="div1.Item2"></GoalResults>
-        </StatsSection>
-
-        <StatsSection SectionName="FA Cup" Team1="faCup.Item1" Team2="faCup.Item2">
-            <CompetitionResults Team1="faCup.Item1" Team2="faCup.Item2"></CompetitionResults>
-            <GameResults Team1="faCup.Item1" Team2="faCup.Item2"></GameResults>
-            <GoalResults Team1="faCup.Item1" Team2="faCup.Item2"></GoalResults>
-        </StatsSection>
-
-        <StatsSection SectionName="League Cup" Team1="leagueCup.Item1" Team2="leagueCup.Item2">
-            <CompetitionResults Team1="leagueCup.Item1" Team2="leagueCup.Item2"></CompetitionResults>
-            <GameResults Team1="leagueCup.Item1" Team2="leagueCup.Item2"></GameResults>
-            <GoalResults Team1="leagueCup.Item1" Team2="leagueCup.Item2"></GoalResults>
-        </StatsSection>
+            </select>
+        </h1>
+        <img class="main-img team1" src="images/@team1.ImageName" alt="@team1.MainName Logo" />
+        <img class="main-img team2" src="images/@team2.ImageName" alt="@team2.MainName Logo" />
+        <p class="tagline">@tagLine</p>
     </div>
-}
+</section>
+
+<StatsSection SectionName="Head to Head" Expandable="false" Team1="head2head.Item1" Team2="head2head.Item2">
+    <GameResults Team1="head2head.Item1" Team2="head2head.Item2">
+        <p>League Games</p>
+    </GameResults>
+</StatsSection>
+
+<StatsSection SectionName="Division 1 / Premiership" Team1="div1.Item1" Team2="div1.Item2">
+    <CompetitionResults Team1="div1.Item1" Team2="div1.Item2">
+        @*<ul class="middle_opts">
+                <li><a title="Players" href="#playersModal"><img width="40px" src="images/player.png" /><div class="extraStats">foo</div></a></li>
+                <li><a title="League Positions"><img width="40px" src="images/graph.png" title="League Positions" /></a></li>
+                <li><a title="Transfers"><img width="40px" src="images/transfer.png" title="Transfers" /></a></li>
+            </ul>*@
+    </CompetitionResults>
+    <GameResults Team1="div1.Item1" Team2="div1.Item2"></GameResults>
+    <GoalResults Team1="div1.Item1" Team2="div1.Item2"></GoalResults>
+</StatsSection>
+
+<StatsSection SectionName="FA Cup" Team1="faCup.Item1" Team2="faCup.Item2">
+    <CompetitionResults Team1="faCup.Item1" Team2="faCup.Item2"></CompetitionResults>
+    <GameResults Team1="faCup.Item1" Team2="faCup.Item2"></GameResults>
+    <GoalResults Team1="faCup.Item1" Team2="faCup.Item2"></GoalResults>
+</StatsSection>
+
+<StatsSection SectionName="League Cup" Team1="leagueCup.Item1" Team2="leagueCup.Item2">
+    <CompetitionResults Team1="leagueCup.Item1" Team2="leagueCup.Item2"></CompetitionResults>
+    <GameResults Team1="leagueCup.Item1" Team2="leagueCup.Item2"></GameResults>
+    <GoalResults Team1="leagueCup.Item1" Team2="leagueCup.Item2"></GoalResults>
+</StatsSection>
+    }
 
 @code {
 
     string t1, t2;
-    string team1Name { get => t1; set { t1 = value; LoadData(); } }
-    string team2Name { get => t2; set { t2 = value; LoadData(); } }
+    TeamName team1, team2;
 
-    TeamName team1;
-    TeamName team2;
+    public string Team1Name
+    {
+        get => t1;
+        set
+        {
+            t1 = value;
+            if (t2 != null)
+            {
+                LoadData();
+            }
+        }
+    }
 
+    public string Team2Name
+    {
+        get => t2;
+        set
+        {
+            if (t2 != value)
+            {
+                t2 = value;
+                if (t1 != null)
+                {
+                    LoadData();
+                }
+            }
+        }
+    }
 
     string tagLine = "The steel city derby";
 
@@ -88,34 +113,34 @@ else
     (TeamStats, TeamStats) head2head { get; set; }
     (TeamStats, TeamStats) leagueCup { get; set; }
 
-    int divisionNumber = 1;
     private readonly Teams teams = new Teams();
-    
+
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
         if (firstRender)
         {
-            team1 = teams.team5;
-            team1Name = team1.MainName;
-            team2 = teams.team6;
-            team2Name = team2.MainName;
-            await LoadData();
+            Team1Name = (team1 = teams.SheffUtd).MainName;
+            Team2Name = (team2 = teams.SheffWeds).MainName;
             StateHasChanged();
         }
     }
 
     async Task LoadData()
     {
-        team1 = teams.SingleOrDefault(x => x.MainName == team1Name);
-        team2 = teams.SingleOrDefault(x => x.MainName == team2Name);
+        team1 = teams.SingleOrDefault(x => x.MainName == Team1Name);
+        team2 = teams.SingleOrDefault(x => x.MainName == Team2Name);
 
-        div1 = await ForecastService.GetDivision(divisionNumber, team1, team2);
-        head2head = await ForecastService.HeadToHead(team1, team2);
-        faCup = await ForecastService.FaCup(team1, team2);
-        leagueCup = await ForecastService.LeagueCup(team1, team2);
-
-        await JSRuntime.InvokeVoidAsync("setbackground", team1.BackGroundName);
+        div1 = await CreateTeamsStats(LeagueData.GetSeasonsForDivision(1), LeagueData.GetTables(1));
+        head2head = await CreateTeamsStats(LeagueData.HeadToHeadGames(team1, team2));
+        faCup = await CreateTeamsStats(CupData.FaCupGames, CupData.FaCupTables);
+        leagueCup = await CreateTeamsStats(CupData.LeagueCupGames, CupData.LeagueCupTables);
+        tagLine = WittyTagLineGenerator.ForTeams(team1, team2);
+        await JsRuntime.InvokeVoidAsync("setbackground", team1.BackGroundName);
     }
 
+    public async Task<(TeamStats, TeamStats)> CreateTeamsStats(IEnumerable<Game> games, ILookup<string, List<string>> seasonsTables = null)
+    {
+        return (new TeamStats(team1, games, seasonsTables), new TeamStats(team2, games, seasonsTables));
+    }
 }
 

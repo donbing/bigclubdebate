@@ -4,13 +4,14 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
+using BigClubDebate.Data;
+using BigClubDebate.Web.Data;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using BigClubDebate.Web.Data;
 
 namespace BigClubDebate.Web
 {
@@ -29,7 +30,10 @@ namespace BigClubDebate.Web
         {
             services.AddRazorPages();
             services.AddServerSideBlazor();
-            services.AddSingleton<WeatherForecastService>();
+            services.AddSingleton(s => new OpenFootballEnglishLeagueReader(Path.Combine(Path.GetDirectoryName(Assembly.GetEntryAssembly().Location), "GameData")));
+            services.AddSingleton<Teams>();
+            services.AddSingleton<LeagueData>();
+            services.AddSingleton<CupData>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

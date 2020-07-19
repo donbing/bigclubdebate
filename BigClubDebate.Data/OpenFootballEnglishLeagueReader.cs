@@ -8,57 +8,54 @@ using BigClubDebate.Data.Model;
 
 namespace BigClubDebate.Data
 {
-    public class OpenFootballEnglishLeagueReader
+    public class OpenFootballEnglishLeagueReader 
     {
-        private readonly string _path;
-        private string FaCupFilePath => Path.Combine(_path, "facup.csv.txt");
-        private string LeagueDataParentFolder => Path.Combine(_path, "england-master");
-        private string LeagueCupFilePath => Path.Combine(_path, "leaguecup.csv.txt");
+        readonly string dataFolderPath;
+        string FaCupFilePath => Path.Combine(dataFolderPath, "facup.csv.txt");
+        string LeagueDataParentFolder => Path.Combine(dataFolderPath, "england-master");
+        string LeagueCupFilePath => Path.Combine(dataFolderPath, "leaguecup.csv.txt");
 
         public IList<CupGame> FaCupGames;
 
         public IList<CupGame> LeagueCupGames;
 
-        public IList<LeagueYear> LeagueYears;
+        public IList<LeagueSeason> LeagueSeasons;
 
         public OpenFootballEnglishLeagueReader(string path)
         {
-            _path = path;
+            dataFolderPath = path;
 
-            LeagueYears = Directory
+            LeagueSeasons = Directory
                 .EnumerateDirectories(LeagueDataParentFolder, "????-??", SearchOption.AllDirectories)
                 .Select(ReadFilesForYearFolder)
-                .OrderBy(x => x.name)
+                .OrderBy(x => x.Name)
                 .ToList();
 
-            LeagueCupGames = File.ReadAllText(LeagueCupFilePath)
-                        .Split(new[] { "\r\n", "\n" }, StringSplitOptions.RemoveEmptyEntries)
-                        .Skip(1)
-                        .Select(x => x.Split(","))
-                        .Select(CupGameFrom)
-                        .Where(x => x != null)
-                        .ToList();
-
-            FaCupGames = File.ReadAllText(FaCupFilePath)
-                    .Split(new[] { "\r\n", "\n" }, StringSplitOptions.RemoveEmptyEntries)
-                    .Skip(1)
-                    .Select(x => x.Split(","))
-                    .Select(CupGameFrom)
-                    .Where(x => x != null)
-                    .ToList();
+            LeagueCupGames = ReadCupGames(LeagueCupFilePath);
+            FaCupGames = ReadCupGames(FaCupFilePath);
         }
-        static LeagueYear ReadFilesForYearFolder(string yearPath)
-        {
-            var yearFolder = new DirectoryInfo(yearPath);
-            var year = yearFolder.Name.Substring(0, 4);
 
-            var leagues = yearFolder.EnumerateFiles("*.txt")
-                .Where(f => !f.Name.EndsWith(".conf.txt"))
-                .Where(f => !f.Name.EndsWith("playoffs.txt"))
-                .Select(f => ReadYearFromFilePath(f.FullName, year))
+        static List<CupGame> ReadCupGames(string csvFilePath) =>
+            File.ReadAllText(csvFilePath)
+                .Split(new[] { "\r\n", "\n" }, StringSplitOptions.RemoveEmptyEntries)
+                .Skip(1)
+                .Select(x => x.Split(","))
+                .Select(CupGameFrom)
+                .Where(x => x != null)
                 .ToList();
 
-            return new LeagueYear(yearFolder.Name, leagues);
+        static LeagueSeason ReadFilesForYearFolder(string yearPath)
+        {
+            var seasonName = Path.GetFileNameWithoutExtension(yearPath);
+            var year = seasonName.Substring(0, 4);
+
+            var divisions = Directory.EnumerateFiles(yearPath, "*.txt")
+                .Where(f => !f.EndsWith(".conf.txt"))
+                .Where(f => !f.EndsWith("playoffs.txt"))
+                .Select(f => ReadYearFromFilePath(f, year))
+                .ToList();
+
+            return new LeagueSeason(seasonName, divisions);
         }
 
         static CupGame CupGameFrom(string[] x)
@@ -72,20 +69,20 @@ namespace BigClubDebate.Data
             return new CupGame
             {
                 Date = DateTime.TryParse(x[0].Replace("\"", "").Trim(), out var date)
-                    ? new DateTime?(date)
-                    : null,
+                    ? date
+                    : throw new Exception("car read date"),
 
-                Year = x[1].Replace("\"", "").Trim(),
+                Season = x[1].Replace("\"", "").Trim(),
                 Home = x[2].Replace("\"", "").Trim(),
                 Away = x[3].Replace("\"", "").Trim(),
                 HomeGoals = int.Parse(reg.Groups[1].Value),
                 AwayGoals = int.Parse(reg.Groups[2].Value),
-                Type = x[7],
+                Type = x[7].Replace("\"", "").Trim(),
             };
         }
 
         const string LeagueYearFileNamePattern = @"^(\d)-(.*).txt";
-        static League ReadYearFromFilePath(string filePath, string year)
+        static Division ReadYearFromFilePath(string filePath, string year)
         {
             var fileInfo = new FileInfo(filePath);
             var fileNameMatch = Regex.Match(fileInfo.Name, LeagueYearFileNamePattern);
@@ -93,30 +90,26 @@ namespace BigClubDebate.Data
             var leagueName = fileNameMatch.Groups[2].Value.Trim();
             var priority = int.Parse(fileNameMatch.Groups[1].Value);
 
-            return ReadYearFromText(priority, leagueName, File.ReadAllText(fileInfo.FullName), year);
+            return ReadSeasonFromText(priority, leagueName, File.ReadAllText(fileInfo.FullName), year);
         }
 
-        static League ReadYearFromText(int priority, string name, string fileText, string year)
+        static Division ReadSeasonFromText(int priority, string name, string fileText, string season)
         {
             var fileLines = fileText.Split(new[] { "\n", "\r\n" }, StringSplitOptions.RemoveEmptyEntries);
             var games = new List<Game>();
-            var date = new DateTime?();
+            var date = new DateTime();
             foreach (var line in fileLines)
             {
                 if (line.StartsWith("["))
                 {
-                    date = DateTime.TryParseExact(line.Replace("[", "").Replace("]", "") + "/" + year, "ddd MMM/d/yyyy", CultureInfo.CurrentCulture, DateTimeStyles.None, out var date1)
-                        ? date1
-                        : DateTime.TryParseExact(line.Replace("[", "").Replace("]", "") + "/" + (int.Parse(year) + 1), "ddd MMM/d/yyyy", CultureInfo.CurrentCulture, DateTimeStyles.None, out var date2)
-                            ? new DateTime?(date2)
-                            : throw new Exception("DT fail");
+                    date = GetDate(season, line);
 
                 }
                 var gameMatch = Regex.Match(line, @"^  (.*)(\d)-(\d)(.*)");
 
                 if (gameMatch.Success)
                 {
-                    var g = ParseGameFrom(gameMatch.Groups, date);
+                    var g = ParseGameFrom(gameMatch.Groups, date, season);
                     games.Add(g);
                 }
             }
@@ -128,26 +121,38 @@ namespace BigClubDebate.Data
                 .Select(ParseFixtureFrom)
                 .ToList();
 
-            return new League
+            return new Division
             {
-                Priority = priority,
-                Name = name,
+                DivisionPriority = priority,
+                DivisionName = name,
                 Games = games,
                 Fixtures = fixtures,
-                Year = year,
+                Year = season,
             };
         }
 
-        static Game ParseGameFrom(GroupCollection m, DateTime? date) => new Game
+        static DateTime GetDate(string season, string line)
         {
-            Home = m[1].Value.Trim(),
-            HomeGoals = int.Parse(m[2].Value.Trim()),
-            Away = m[4].Value.Trim(),
-            AwayGoals = int.Parse(m[3].Value.Trim()),
-            Date = date,
-        };
+            var dateLine = line.Replace("[", "").Replace("]", "") + "/";
+            return DateTime.TryParseExact(dateLine + season, "ddd MMM/d/yyyy", CultureInfo.CurrentCulture, DateTimeStyles.None, out var date1)
+                ? date1
+                : DateTime.TryParseExact(dateLine + (int.Parse(season) + 1), "ddd MMM/d/yyyy", CultureInfo.CurrentCulture, DateTimeStyles.None, out var date2)
+                    ? date2
+                    : throw new Exception("DT fail");
+        }
 
-         static Fixture ParseFixtureFrom(GroupCollection m) => new Fixture
+        static Game ParseGameFrom(GroupCollection m, DateTime date, string season)
+            => new Game
+            {
+                Home = m[1].Value.Trim(),
+                HomeGoals = int.Parse(m[2].Value.Trim()),
+                Away = m[4].Value.Trim(),
+                AwayGoals = int.Parse(m[3].Value.Trim()),
+                Date = date,
+                Season = season,
+            };
+
+        static Fixture ParseFixtureFrom(GroupCollection m) => new Fixture
         {
             Home = m[1].Value.Trim(),
             Away = m[4].Value.Trim(),

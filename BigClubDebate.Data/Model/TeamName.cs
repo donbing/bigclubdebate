@@ -12,7 +12,7 @@ namespace BigClubDebate.Data.Model
         public string MainName 
             => this.First();
 
-        public string SlangName 
+        public string NickName 
             => this.ElementAt(1);
 
         public TeamName(IEnumerable<string> names, string imageName, string backGroundName) : base(names, StringComparer.OrdinalIgnoreCase)
