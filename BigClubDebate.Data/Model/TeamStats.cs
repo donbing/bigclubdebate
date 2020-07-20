@@ -90,7 +90,7 @@ namespace BigClubDebate.Data.Model
         public string LastCompetitionWinDate =>
             tables
                 .Where(seasons => seasons.Any(table => Name.Matches(table[0])))
-                .Max(x => x.Key);
+                .Max(x => $"{int.Parse(x.Key) + 1}");
 
         public int CompetitionEntriesInLast10Years =>
             tables

@@ -25,21 +25,29 @@ use ojective (ish) stastitics to determine which of two football clubs is bigger
 ## todo
 front:
  
- - last update date at top
- - custom tagline for derbys
+:ux improvements
  - nicer background transition
  - nicer fonts
-
- - add stadium info
- - add more .extras (tool tip items)
- 
- - add player/graph/transfers dialog
  - make more/less transion even smoother
  - make more/less button take up less space
+ 
+:ui features
+ - add stadium info
+ - add more .extras (tool tip items)
+ - add player/graph/transfers dialog
+ - last update date at top
 
+:architecture
+ - optimise loading :( fuckking dastabinding mess
+ - change images to data-urls
+ - docker image build that pulls in llatest data
+ - service to distribute data
+
+:done
  * fix numbers not fitting in boxes
  * custom backgrounds per team
  * resize logos
+ * custom tagline for derbys
 
  back:
   - how to store data

@@ -10,24 +10,65 @@ namespace BigClubDebate.Data.Model.Reader
 {
     public class FootyDataReader 
     {
+        readonly FootballDataFolderConfig _config;
         public readonly IList<CupGame> FaCupGames;
         public readonly IList<CupGame> LeagueCupGames;
         public readonly IList<Season> LeagueSeasons;
 
         public FootyDataReader(FootballDataFolderConfig config)
         {
+            _config = config;
             LeagueSeasons = ReadLeagueSeasons(config.LeagueDataParentFolder);
             LeagueCupGames = ReadCupGames(config.LeagueCupFilePath);
             FaCupGames = ReadCupGames(config.FaCupFilePath);
         }
 
-        static List<Season> ReadLeagueSeasons(string leagueDataParentFolder)
+        List<Season> ReadLeagueSeasons(string leagueDataParentFolder)
         {
+            var older = File.ReadAllLines(_config.OlderLeagueCupFilePath)
+                .Skip(1)
+                .Select(x => x.Split(","))
+                .Select(LeagueGameFrom)
+                .ToLookup(s => s.Season)
+                .ToLookup(g => g.Key, g => g.GroupBy(gg => gg.Division))
+                .Select(Thing)
+                .ToList();
+            return older.ToList();
+            // codre for parsing the better maintained league file... only goes back to 1991, old data goes to 1880
             return Directory
                 .EnumerateDirectories(leagueDataParentFolder, "????-??", SearchOption.AllDirectories)
                 .Select(ReadFilesForYearFolder)
                 .OrderBy(x => x.Name)
                 .ToList();
+        }
+
+        Season Thing(IGrouping<string, IEnumerable<IGrouping<string, Game>>> s)
+        {
+            var leagues = s
+                .SelectMany(x => SeasonDiv(x,s.Key))
+                .ToList();
+
+            return new Season(s.Key, leagues);
+        }
+
+        List<DivisionSeason> SeasonDiv(IEnumerable<IGrouping<string, Game>> arg, string sKey) 
+            => arg.Select(dss => new DivisionSeason(sKey, dss.Key, dss.ToList(), Int32.Parse(dss.Key == "NA" ? "1" : dss.Key))).ToList();
+
+        Game LeagueGameFrom(string[] x)
+        {
+            return new Game
+            {
+                Date = DateTime.TryParse(x[0].Replace("\"", "").Trim(), out var date)
+                    ? date
+                    : throw new Exception("cant read date"),
+
+                Season = x[1].Replace("\"", "").Trim(),
+                Home = x[2].Replace("\"", "").Trim(),
+                Away = x[3].Replace("\"", "").Trim(),
+                HomeGoals = int.Parse(x[5]),
+                AwayGoals = int.Parse(x[6]),
+                Division = x[7], // int in old file
+            };
         }
 
         static List<CupGame> ReadCupGames(string csvFilePath) =>
@@ -88,7 +129,7 @@ namespace BigClubDebate.Data.Model.Reader
             return ReadSeasonFromText(priority, leagueName, File.ReadAllText(fileInfo.FullName), year);
         }
 
-        static DivisionSeason ReadSeasonFromText(int priority, string name, string fileText, string season)
+        static DivisionSeason ReadSeasonFromText(int priority, string divisionName, string fileText, string season)
         {
             var fileLines = fileText.Split(new[] { "\n", "\r\n" }, StringSplitOptions.RemoveEmptyEntries);
             var games = new List<Game>();
@@ -104,7 +145,7 @@ namespace BigClubDebate.Data.Model.Reader
 
                 if (gameMatch.Success)
                 {
-                    var g = ParseGameFrom(gameMatch.Groups, date, season);
+                    var g = ParseGameFrom(gameMatch.Groups, date, season, divisionName);
                     games.Add(g);
                 }
             }
@@ -116,13 +157,9 @@ namespace BigClubDebate.Data.Model.Reader
                 .Select(ParseFixtureFrom)
                 .ToList();
 
-            return new DivisionSeason
+            return new DivisionSeason(season, divisionName, games, priority)
             {
-                DivisionPriority = priority,
-                DivisionName = name,
-                Games = games,
                 Fixtures = fixtures,
-                Year = season,
             };
         }
 
@@ -136,7 +173,7 @@ namespace BigClubDebate.Data.Model.Reader
                     : throw new Exception("DT fail");
         }
 
-        static Game ParseGameFrom(GroupCollection m, DateTime date, string season)
+        static Game ParseGameFrom(GroupCollection m, DateTime date, string season, string division)
             => new Game
             {
                 Home = m[1].Value.Trim(),
@@ -145,6 +182,7 @@ namespace BigClubDebate.Data.Model.Reader
                 AwayGoals = int.Parse(m[3].Value.Trim()),
                 Date = date,
                 Season = season,
+                Division = division,
             };
 
         static Fixture ParseFixtureFrom(GroupCollection m) => new Fixture

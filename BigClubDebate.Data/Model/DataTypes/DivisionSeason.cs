@@ -13,6 +13,13 @@ namespace BigClubDebate.Data.Model.DataTypes
         public IEnumerable<Game> Games { get; set; }
         public IEnumerable<Fixture> Fixtures { get; set; }
 
+        public DivisionSeason(string year, string divisionName, IEnumerable<Game> games, int priority)
+        {
+            DivisionPriority = priority;
+            Year = year;
+            DivisionName = divisionName;
+            Games = games;
+        }
         public IEnumerator<Game> GetEnumerator() 
             => Games.GetEnumerator();
 

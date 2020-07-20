@@ -12,7 +12,7 @@
 @inject CupGames CupData
 @inject IJSRuntime JsRuntime
 
-@if (team1 == null || team2== null)
+@if (Team1 == null || Team2== null)
 {
     <p><em>Loading...</em></p>
 }
@@ -25,46 +25,46 @@ else
             <h1>
                 <select id="team1Select" @bind="Team1Name">
                     @foreach (var team in teams.ToList())
-                        {
-                    <option value="@team.MainName" disabled="@(Team2Name == team.MainName)">@team.NickName</option>
-                        }
+                    {
+                        <option value="@team.MainName" disabled="@(Team2Name == team.MainName)">@team.NickName</option>
+                    }
                 </select>
                 <span>VS</span>
                 <select id="team2Select" @bind="Team2Name">
                     @foreach (var team in teams.ToList())
-                        {
-                    <option value="@team.MainName" disabled="@(Team1Name == team.MainName)">@team.NickName</option>
-                        }
+                    {
+                        <option value="@team.MainName" disabled="@(Team1Name == team.MainName)">@team.NickName</option>
+                    }
                 </select>
             </h1>
-            <img class="main-img team1" src="images/badges/@team1.ImageName" alt="picture of shield" />
-            <img class="main-img team2" src="images/badges/@team2.ImageName" alt="picture of shield" />
+            <img class="main-img team1" src="images/badges/@Team1.ImageName" alt="picture of shield" />
+            <img class="main-img team2" src="images/badges/@Team2.ImageName" alt="picture of shield" />
             <p class="tagline">@tagLine</p>
         </div>
     </section>
 
-    <HeadToHeadSection Team1Name="team1" Team2Name="team2" />
-    <LeagueSection Team1Name="team1" Team2Name="team2" />
-    <LeagueCupSection Team1Name="team1" Team2Name="team2" />
-    <FaCupSection Team1Name="team1" Team2Name="team2" />
+    <HeadToHeadSection Team1Name="Team1" Team2Name="Team2" />
+    <LeagueSection Team1Name="Team1" Team2Name="Team2" />
+    <LeagueCupSection Team1Name="Team1" Team2Name="Team2" />
+    <FaCupSection Team1Name="Team1" Team2Name="Team2" />
 }
 
 
 @code {
 
     string t1, t2;
-    public TeamName team1 { get; set; }
-    public TeamName team2 { get; set; }
+    public TeamName Team1 { get; set; }
+    public TeamName Team2 { get; set; }
 
     public string Team1Name
     {
         get => t1 ?? teams.SheffUtd.MainName;
         set
         {
-            t1 = value;
-            team1 = teams.SingleOrDefault(x => x.MainName == Team1Name);
-            if (t2 != null)
+            if (t2 != value)
             {
+                t1 = value;
+                Team1 = teams.SingleOrDefault(x => x.MainName == Team1Name);
                 LoadData();
             }
         }
@@ -78,13 +78,13 @@ else
             if (t2 != value)
             {
                 t2 = value;
-                team2 = teams.SingleOrDefault(x => x.MainName == Team2Name);
+                Team2 = teams.SingleOrDefault(x => x.MainName == Team2Name);
                 LoadData();
             }
         }
     }
 
-    string tagLine => TagGenerator.ForTeams(team1, team2);
+    string tagLine => TagGenerator.ForTeams(Team1, Team2);
 
     private readonly Teams teams = new Teams();
 
@@ -92,16 +92,15 @@ else
     {
         if (firstRender)
         {
-            Team1Name = (team1 = teams.SheffUtd).MainName;
-            Team2Name = (team2 = teams.SheffWeds).MainName;
+            Team1Name = (Team1 = teams.SheffUtd).MainName;
+            Team2Name = (Team2 = teams.SheffWeds).MainName;
             StateHasChanged();
         }
     }
 
     async Task LoadData()
     {
-        await JsRuntime.InvokeVoidAsync("setbackground", team1.BackGroundName);
-        StateHasChanged();
+        await JsRuntime.InvokeVoidAsync("setbackground", Team1.BackGroundName);
     }
 }
 

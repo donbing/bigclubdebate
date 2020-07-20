@@ -18,15 +18,35 @@
     </StatsSection>
 
 @code {
-    public DatesFilter Datesfilter { get; set; } 
-    public TeamStats Team1 { get; set; }
+
+    public DatesFilter Datesfilter { get; set; }
+    public TeamStats Team1{ get; set; }
     public TeamStats Team2 { get; set; }
 
+    TeamName team1, team2;
     [Parameter]
-    public TeamName Team1Name { get; set; }
+    public TeamName Team1Name 
+    {
+        get => team1;
+        set
+        {
+            if(Datesfilter != null)
+                Datesfilter.Est2 = null;
+            team1 = value;
+        }
+    }
 
     [Parameter]
-    public TeamName Team2Name { get; set; }
+    public TeamName Team2Name 
+    {
+        get => team2;
+        set
+        {
+            if(Datesfilter != null)
+                Datesfilter.Est2 = null;
+            team2 = value;
+        }
+    }
     
     protected override void OnParametersSet()
     {
@@ -41,4 +61,5 @@
         Datesfilter = new DatesFilter(LoadGames, Team1.CompetitionStart, Team2.CompetitionStart);
         StateHasChanged();
     }
+
 }

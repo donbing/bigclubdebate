@@ -23,6 +23,8 @@ namespace BigClubDebate.Data.Model.DataTypes
         public int TotalGoals 
             => AwayGoals + HomeGoals;
 
+        public string Division { get; set; }
+
         public int PointsFor(string teamName) 
             => Winner == teamName ? 3 : Loser == teamName ? 0 : 1;
 

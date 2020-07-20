@@ -7,11 +7,11 @@ namespace BigClubDebate.Data.Model.DataTypes
 {
     public class Season : IEnumerable<Game>
     {
-        public IEnumerable<DivisionSeason> Divisions { get; set; }
+        public IList<DivisionSeason> Divisions { get; set; }
         
         public string Name;
 
-        public Season(string yearName, IEnumerable<DivisionSeason> leagues) 
+        public Season(string yearName, IList<DivisionSeason> leagues) 
         { 
             Name = yearName;
             Divisions = leagues;
@@ -21,7 +21,10 @@ namespace BigClubDebate.Data.Model.DataTypes
             => Divisions.First(x => x.DivisionPriority == division);
 
         public IEnumerator<Game> GetEnumerator()
-            => Divisions.SelectMany(x => x.Games).GetEnumerator();
+        {
+            var games = Divisions.SelectMany(x => x.Games).ToList();
+            return games.GetEnumerator();
+        }
 
         IEnumerator IEnumerable.GetEnumerator() 
             => GetEnumerator();

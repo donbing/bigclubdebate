@@ -13,6 +13,7 @@ namespace BigClubDebate.Data.Model.Reader
         public string FaCupFilePath => Path.Combine(rootPath, "facup.csv.txt");
         public string LeagueDataParentFolder => Path.Combine(rootPath, "england-master");
         public string LeagueCupFilePath => Path.Combine(rootPath, "leaguecup.csv.txt");
+        public string OlderLeagueCupFilePath => Path.Combine(rootPath, "england.csv.txt");
         public static FootballDataFolderConfig FromEntryAssemblyPath() 
             => new FootballDataFolderConfig(Path.Combine(Path.GetDirectoryName(Assembly.GetEntryAssembly().Location), "GameData"));
     }
