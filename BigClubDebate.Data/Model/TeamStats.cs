@@ -87,10 +87,12 @@ namespace BigClubDebate.Data.Model
                 .SelectMany(t => t)
                 .Count(t => Name.Matches(t[0]));
 
-        public string LastCompetitionWinDate =>
+        public IEnumerable<string> Last10CompetitionWinDates =>
             tables
                 .Where(seasons => seasons.Any(table => Name.Matches(table[0])))
-                .Max(x => $"{int.Parse(x.Key) + 1}");
+                .OrderByDescending(x => x.Key)
+                .Select(x => x.Key)
+                .Take(10);
 
         public int CompetitionEntriesInLast10Years =>
             tables

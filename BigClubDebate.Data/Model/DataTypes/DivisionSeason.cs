@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace BigClubDebate.Data.Model.DataTypes
 {
@@ -28,5 +29,16 @@ namespace BigClubDebate.Data.Model.DataTypes
 
         public override string ToString() 
             => $"{DivisionName+Environment.NewLine}{string.Join(Environment.NewLine,Games)}{string.Join(Environment.NewLine, Fixtures)}";
+
+        public bool IsValid()
+        {
+            var fuckup1 = Games.Where(g => g.Drawn && g.Loser != null).ToList();
+            var fuckup2 = Games.Select(g => g.Home).Distinct().Count();
+            var fuckup3 = Games.Select(g => g.Away).Distinct().Count();
+            if (fuckup1.Count == 0 && fuckup2 == fuckup3)
+                return true;
+            else
+                return false;
+        }
     }
 }

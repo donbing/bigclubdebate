@@ -1,0 +1,43 @@
+﻿@page "/data"
+
+@inject LeagueGames LeagueData
+@using BigClubDebate.Data.Model.DataSources
+@using BigClubDebate.Data.Model.DataTypes
+
+@if (false)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <select @bind="Year">
+        @foreach (var year in Years)
+        {
+            <option value="@year">@year</option>
+        }
+    </select>
+    <ol>
+        @foreach (var team in LeagueTable.TableAndPoints(g.Where(ga => ga.Season == Year)))
+        {
+            <li>@team.Item1</li>
+            <li>@team.Item2</li>
+            <li>@string.Join(",",team.Item3)</li>
+        }
+    </ol>
+  
+}
+
+@code {
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+        //data = LeagueData.DivisionTables(1);
+        g = LeagueData.DivisionGames(1);
+    }
+
+    IEnumerable<string> Years => g.Select(y => y.Season).Distinct();
+    ILookup<string, List<string>> data;
+    List<Game> g;
+    public string Year { get; set; }
+
+}

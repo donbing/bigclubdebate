@@ -34,5 +34,7 @@ namespace BigClubDebate.Data.Model.DataTypes
 
         public override int GetHashCode()
             => HashCode.Combine(MainName);
+
+        public static implicit operator TeamName(string name) => new TeamName(new []{name},"");
     }
 }

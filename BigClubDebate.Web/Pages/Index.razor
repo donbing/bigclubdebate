@@ -49,22 +49,19 @@ else
     <FaCupSection Team1Name="Team1" Team2Name="Team2" />
 }
 
-
 @code {
 
-    string t1, t2;
     public TeamName Team1 { get; set; }
     public TeamName Team2 { get; set; }
 
     public string Team1Name
     {
-        get => t1 ?? teams.SheffUtd.MainName;
+        get => Team1?.MainName ?? teams.SheffUtd.MainName;
         set
         {
-            if (t2 != value)
+            if (Team1.MainName != value)
             {
-                t1 = value;
-                Team1 = teams.SingleOrDefault(x => x.MainName == Team1Name);
+                Team1 = teams.SingleOrDefault(x => x.MainName == value);
                 LoadData();
             }
         }
@@ -72,13 +69,12 @@ else
 
     public string Team2Name
     {
-        get => t2 ?? teams.SheffWeds.MainName;
+        get => Team2?.MainName  ?? teams.SheffWeds.MainName;
         set
         {
-            if (t2 != value)
+            if (Team2?.MainName != value)
             {
-                t2 = value;
-                Team2 = teams.SingleOrDefault(x => x.MainName == Team2Name);
+                Team2 = teams.SingleOrDefault(x => x.MainName == value);
                 LoadData();
             }
         }

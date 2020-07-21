@@ -31,7 +31,10 @@
                 else
                 {
                     <li><span>@Team1.CompetitionWinsInLast10Years</span>/10 seasons</li>
-                    <li><span class="date">@Team1.LastCompetitionWinDate</span> last win</li>
+                    @foreach (var win in @Team1.Last10CompetitionWinDates)
+                    {
+                        <li><span class="date"></span>@win</li>
+                    }
                 }
             </ul>
         </li>
@@ -48,9 +51,11 @@
                     <li><span>NO WINS</span></li>
                 }
                 else
-                {
-                    <li><span>@Team2.CompetitionWinsInLast10Years</span>/10 seasons</li>
-                    <li><span class="date">@Team2.LastCompetitionWinDate</span> last win</li>
+                { 
+                    @foreach (var win in @Team2.Last10CompetitionWinDates)
+                    {
+                        <li><span class="date"></span>@win</li>
+                    }
                 }
             </ul>
         </li>

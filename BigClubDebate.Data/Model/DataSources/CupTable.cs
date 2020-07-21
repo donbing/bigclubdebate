@@ -7,6 +7,7 @@ namespace BigClubDebate.Data.Model.DataSources
 {
     public class CupTable : List<string>
     {
+        public static IEnumerable<CupGame> Finals;
         public string Name { get; set; }
 
         public CupTable(IGrouping<string, CupGame> seasonsCupGames) : base(OrderSeasonCupTable(seasonsCupGames))
@@ -17,9 +18,11 @@ namespace BigClubDebate.Data.Model.DataSources
         private static IEnumerable<string> OrderSeasonCupTable(IGrouping<string, CupGame> seasonsCupGames)
         {
             var finalIds = new[] {"final", "Final", "f"};
-            var final = seasonsCupGames
-                .OrderByDescending(g => g.Date)
-                .LastOrDefault(x => finalIds.Contains(x.Type));
+            Finals = seasonsCupGames
+                .OrderByDescending(x => x.Date)
+                .Where(x => finalIds.Contains(x.Type));
+            var final = Finals
+                .Last();
 
             if (final == null)
             {
