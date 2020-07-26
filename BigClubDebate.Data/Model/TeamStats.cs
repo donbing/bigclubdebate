@@ -2,37 +2,40 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using BigClubDebate.Data.Model.DataTypes;
 
 namespace BigClubDebate.Data.Model
 {
     public class TeamStats
     {
-        public TeamName Name { get; set; }
+        public TeamName Name { get; }
         readonly IEnumerable<Game> teamsGames;
         readonly ILookup<string, List<string>> tables;
+        readonly IEnumerable<Game> wins;
 
         public TeamStats(TeamName teamName, IEnumerable<Game> allCompetitionGames, ILookup<string, List<string>> tables)
         {
             Name = teamName;
             teamsGames = allCompetitionGames.Where(Name.PlayedIn).ToList();
             this.tables = tables;
+            wins = teamsGames.Where(g => Name.Matches(g.Winner));
         }
 
         public int Games
             => teamsGames.Count();
 
         public int Wins
-            => teamsGames.Count(g => Name.Matches(g.Winner));
+            => wins.Count();
 
         public int CleanWins
-            => teamsGames.Count(g => Name.Matches(g.Winner) && g.GoalsAgainst(g.Winner) == 0);
+            => wins.Count(g => g.GoalsAgainst(g.Winner) == 0);
 
         public int AwayWins
-            => teamsGames.Count(g => Name.Matches(g.Winner) && Name.Matches(g.Away));
+            => wins.Count(g => Name.Matches(g.Away));
 
         public int WonBy5OrMore
-            => teamsGames.Count(g => Name.Matches(g.Winner) && g.GoalsFor(g.Winner) - g.GoalsAgainst(g.Winner) >= 5);
+            => wins.Count(g => g.GoalsFor(g.Winner) - g.GoalsAgainst(g.Winner) >= 5);
 
         public int Losses
             => teamsGames.Count(g => Name.Matches(g.Loser));

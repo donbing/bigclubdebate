@@ -21,21 +21,16 @@ namespace BigClubDebate.Data
 
             var leagueSeasons = openFootballEnglishLeagueReader.LeagueSeasons;
             var facup = openFootballEnglishLeagueReader.FaCupGames;
-
-            var fails = leagueSeasons.SelectMany(s => s.Divisions.Where(d => !d.IsValid())).ToList();
-
+            
             var utd = new TeamStats(Teams.SheffUtd, leagueSeasons.SelectMany(x => x), Standings(facup));
             var weds = new TeamStats(Teams.SheffWeds, leagueSeasons.SelectMany(x => x), Standings(facup));
 
             Console.WriteLine($"{utd.Name} wins:{utd.CompetitionWins}");
             Console.WriteLine($"{utd.Name} wins:{utd.Last10CompetitionWinDates.ToList()}");
             Console.WriteLine($"{weds.Name} wins:{weds.CompetitionWins}");
-
-            //ShowStats(utd, weds);
-            //Console.WriteLine(string.Join(Environment.NewLine, facup));
         }
 
-        public static ILookup<string, List<string>> Standings(IEnumerable<CupGame> cupGames) =>
+        static ILookup<string, List<string>> Standings(IEnumerable<CupGame> cupGames) =>
             cupGames.GroupBy(x => x.Season)
                 .ToLookup(
                     year => year.Key,

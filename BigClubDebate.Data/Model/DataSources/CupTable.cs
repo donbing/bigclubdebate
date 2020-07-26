@@ -21,8 +21,8 @@ namespace BigClubDebate.Data.Model.DataSources
             Finals = seasonsCupGames
                 .OrderByDescending(x => x.Date)
                 .Where(x => finalIds.Contains(x.Type));
-            var final = Finals
-                .Last();
+
+            var final = Finals.Last();
 
             if (final == null)
             {
