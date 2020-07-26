@@ -25,14 +25,16 @@ namespace BigClubDebate.Data.Model.DataSources
                 .Where(x => !startDate.HasValue || x.Date >= startDate);
         }
 
-        public ILookup<string, List<string>> GetFaCupTables(DateTime? startDate)
+        public ILookup<string, List<string>> GetFaCupTables(DateTime? startDate = null)
         {
-            return _faCupTables
+            var faCupTables = _faCupTables
                 .Where(x => !startDate.HasValue || int.Parse(x.Key) >= startDate.Value.Year)
                 .ToLookup(x => x.Key, x => x.SelectMany(y => y).ToList());
+
+            return faCupTables;
         }
 
-        public ILookup<string, List<string>> GetLeagueCupTables(DateTime? startDate)
+        public ILookup<string, List<string>> GetLeagueCupTables(DateTime? startDate = null)
         {
             return _leagueCupTables
                 .Where(x => !startDate.HasValue || int.Parse(x.Key) >= startDate.Value.Year)

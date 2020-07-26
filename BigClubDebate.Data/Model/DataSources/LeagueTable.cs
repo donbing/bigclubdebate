@@ -7,6 +7,8 @@ namespace BigClubDebate.Data.Model.DataSources
     public class LeagueTable : List<string>
     {
         public IEnumerable<Game> Games { get; }
+        public string Winner => this[0];
+        public string RunnerUp => this[1];
 
         public LeagueTable(IEnumerable<Game> games) : base(CalculateLeagueTable(games))
         {

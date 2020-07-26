@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using BigClubDebate.Data.Model.DataTypes;
 
 namespace BigClubDebate.Data.Model.DataSources
@@ -9,6 +10,8 @@ namespace BigClubDebate.Data.Model.DataSources
     {
         public static IEnumerable<CupGame> Finals;
         public string Name { get; set; }
+        public string Winner => this[0];
+        public string RunnerUp => this[1];
 
         public CupTable(IGrouping<string, CupGame> seasonsCupGames) : base(OrderSeasonCupTable(seasonsCupGames))
         {

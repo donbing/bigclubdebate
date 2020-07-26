@@ -1,15 +1,10 @@
 ﻿@page "/"
 
 @using BigClubDebate.Data
-@using BigClubDebate.Data.Model
-@using BigClubDebate.Data.Model.DataSources
 @using BigClubDebate.Data.Model.DataTypes
-@using BigClubDebate.Web.Pages.Components
 @using BigClubDebate.Web.Data
 
-@inject LeagueGames LeagueData
 @inject WittyTagLineGenerator TagGenerator
-@inject CupGames CupData
 @inject IJSRuntime JsRuntime
 
 @if (Team1 == null || Team2== null)

@@ -11,14 +11,14 @@ namespace BigClubDebate.Data.Model
     {
         public TeamName Name { get; }
         readonly IEnumerable<Game> teamsGames;
-        readonly ILookup<string, List<string>> tables;
+        readonly ILookup<string, List<string>> seasonEndTables;
         readonly IEnumerable<Game> wins;
 
-        public TeamStats(TeamName teamName, IEnumerable<Game> allCompetitionGames, ILookup<string, List<string>> tables)
+        public TeamStats(TeamName teamName, IEnumerable<Game> allCompetitionGames, ILookup<string, List<string>> seasonEndTables)
         {
             Name = teamName;
             teamsGames = allCompetitionGames.Where(Name.PlayedIn).ToList();
-            this.tables = tables;
+            this.seasonEndTables = seasonEndTables;
             wins = teamsGames.Where(g => Name.Matches(g.Winner));
         }
 
@@ -70,35 +70,35 @@ namespace BigClubDebate.Data.Model
                 .FirstOrDefault();
 
         public int? CompetitionWins 
-            => tables?
+            => seasonEndTables?
                 .SelectMany(t => t)
                 .Count(t => Name.Matches(t[0]));
 
         public int? RunnersUp 
-            => tables?
+            => seasonEndTables?
                 .SelectMany(t => t)
                 .Count(t => Name.Matches(t[1]));
 
         public int? Years 
-            => tables?
+            => seasonEndTables?
                 .SelectMany(t => t)
                 .Count(t => t.Any(Name.Matches));
 
         public int CompetitionWinsInLast10Years 
-            => tables
+            => seasonEndTables
                 .Where(t=> (DateTime.UtcNow.Year - int.Parse(t.Key)) <= 10)
                 .SelectMany(t => t)
                 .Count(t => Name.Matches(t[0]));
 
         public IEnumerable<string> Last10CompetitionWinDates =>
-            tables
+            seasonEndTables
                 .Where(seasons => seasons.Any(table => Name.Matches(table[0])))
                 .OrderByDescending(x => x.Key)
                 .Select(x => x.Key)
                 .Take(10);
 
         public int CompetitionEntriesInLast10Years =>
-            tables
+            seasonEndTables
                 .Where(t => (DateTime.UtcNow.Year - int.Parse(t.Key)) <= 10)
                 .SelectMany(t => t)
                 .Count(t => t.Any(Name.Matches));
