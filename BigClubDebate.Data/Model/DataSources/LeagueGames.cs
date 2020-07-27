@@ -28,9 +28,9 @@ namespace BigClubDebate.Data.Model.DataSources
                 .SelectMany(x => x.Games)
                 .ToList();
 
-        public ILookup<string, List<string>> DivisionTables(int division, DateTime? startDate = null) 
+        public IEnumerable<ITable> DivisionTables(int division, DateTime? startDate = null) 
             => DivisionGames(division, startDate)
                 .GroupBy(x => x.Season)
-                .ToLookup(year => year.Key, year => new LeagueTable(year).ToList());
+                .Select(year => new LeagueTable(year));
     }
 }

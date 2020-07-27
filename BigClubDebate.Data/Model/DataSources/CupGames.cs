@@ -9,9 +9,10 @@ namespace BigClubDebate.Data.Model.DataSources
     public class CupGames
     {
         readonly IEnumerable<CupGame> leagueCupGames;
-        readonly ILookup<string, List<string>> _leagueCupTables;
+        readonly IEnumerable<CupTable> _leagueCupTables;
+
         readonly IEnumerable<CupGame> _faCupGames;
-        readonly ILookup<string, List<string>> _faCupTables;
+        readonly IEnumerable<CupTable> _faCupTables;
 
         public IEnumerable<CupGame> GetFaCupGames(DateTime? startDate = null)
         {
@@ -25,21 +26,11 @@ namespace BigClubDebate.Data.Model.DataSources
                 .Where(x => !startDate.HasValue || x.Date >= startDate);
         }
 
-        public ILookup<string, List<string>> GetFaCupTables(DateTime? startDate = null)
-        {
-            var faCupTables = _faCupTables
-                .Where(x => !startDate.HasValue || int.Parse(x.Key) >= startDate.Value.Year)
-                .ToLookup(x => x.Key, x => x.SelectMany(y => y).ToList());
+        public IEnumerable<CupTable> GetFaCupTables(DateTime? startDate = null) 
+            => _faCupTables.Where(x => !startDate.HasValue || x.StartDate >= startDate.Value.Year);
 
-            return faCupTables;
-        }
-
-        public ILookup<string, List<string>> GetLeagueCupTables(DateTime? startDate = null)
-        {
-            return _leagueCupTables
-                .Where(x => !startDate.HasValue || int.Parse(x.Key) >= startDate.Value.Year)
-                .ToLookup(x => x.Key, x=> x.SelectMany(y => y).ToList());
-        }
+        public IEnumerable<CupTable> GetLeagueCupTables(DateTime? startDate = null) 
+            => _leagueCupTables.Where(x => !startDate.HasValue || x.StartDate >= startDate.Value.Year);
 
         public CupGames(FootyDataReader data)
         {
@@ -49,9 +40,9 @@ namespace BigClubDebate.Data.Model.DataSources
             _leagueCupTables = GetSeasonsTables(leagueCupGames);
         }
 
-        static ILookup<string, List<string>> GetSeasonsTables(IEnumerable<CupGame> cupGames) =>
-            cupGames
+        static IEnumerable<CupTable> GetSeasonsTables(IEnumerable<CupGame> cupGames)
+            => cupGames
                 .GroupBy(x => x.Season)
-                .ToLookup(year => year.Key, year => new CupTable(year).ToList());
+                .Select(year => new CupTable(year));
     }
 }

@@ -6,16 +6,19 @@ using BigClubDebate.Data.Model.DataTypes;
 
 namespace BigClubDebate.Data.Model.DataSources
 {
-    public class CupTable : List<string>
+    public class CupTable : List<string>, ITable
     {
         public static IEnumerable<CupGame> Finals;
         public string Name { get; set; }
+        public IEnumerable<Game> Games { get; }
         public string Winner => this[0];
         public string RunnerUp => this[1];
+        public int StartDate => int.Parse(Name);
 
         public CupTable(IGrouping<string, CupGame> seasonsCupGames) : base(OrderSeasonCupTable(seasonsCupGames))
         {
             Name = seasonsCupGames.Key;
+            Games = seasonsCupGames;
         }
 
         private static IEnumerable<string> OrderSeasonCupTable(IGrouping<string, CupGame> seasonsCupGames)

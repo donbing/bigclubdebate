@@ -14,7 +14,7 @@ namespace BigClubDebate.Data
         private static readonly Teams Teams = new Teams();
 
         static void Main(string[] args)
-        {
+        {/*
             var path = Path.Combine(Directory.GetCurrentDirectory(), "..", "..", "..", "..", "content", "GameData");
 
             var openFootballEnglishLeagueReader = new FootyDataReader(new FootballDataFolderConfig(path));
@@ -28,15 +28,17 @@ namespace BigClubDebate.Data
             Console.WriteLine($"{utd.Name} wins:{utd.CompetitionWins}");
             Console.WriteLine($"{utd.Name} wins:{utd.Last10CompetitionWinDates.ToList()}");
             Console.WriteLine($"{weds.Name} wins:{weds.CompetitionWins}");
+            */
         }
-
-        static ILookup<string, List<string>> Standings(IEnumerable<CupGame> cupGames) =>
+        
+        /*
+        static IEnumerable<CupTable> Standings(IEnumerable<CupGame> cupGames) =>
             cupGames.GroupBy(x => x.Season)
                 .ToLookup(
                     year => year.Key,
                     year => new CupTable(year).ToList()
                 );
-
+        */
         private static void ShowStats(TeamStats utd, TeamStats weds)
         {
             Console.WriteLine($"{utd.Name} wins:{utd.Wins}");

@@ -4,15 +4,17 @@ using BigClubDebate.Data.Model.DataTypes;
 
 namespace BigClubDebate.Data.Model.DataSources
 {
-    public class LeagueTable : List<string>
+    public class LeagueTable : List<string>, ITable
     {
         public IEnumerable<Game> Games { get; }
         public string Winner => this[0];
         public string RunnerUp => this[1];
+        public int StartDate { get; }
 
         public LeagueTable(IEnumerable<Game> games) : base(CalculateLeagueTable(games))
         {
             Games = games;
+            StartDate = games.Min(g => g.Date.Year);
         }
 
         public static List<string> CalculateLeagueTable(IEnumerable<Game> games)
@@ -42,5 +44,13 @@ namespace BigClubDebate.Data.Model.DataSources
             return st.Select(s=>(s.Key,s.Value))
                 .OrderByDescending(x => x.Item2);
         }
+    }
+
+    public interface ITable : IEnumerable<string>
+    {
+        IEnumerable<Game> Games { get; }
+        string Winner { get; }
+        string RunnerUp { get; }
+        int StartDate { get; }
     }
 }

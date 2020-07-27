@@ -30,11 +30,11 @@
 
     void LoadGames()
     {
-        (Team1, Team2) = CreateTeamsStats(CupData.GetFaCupGames(Datesfilter.Est1), CupData.GetFaCupTables(Datesfilter.Est1));
+        (Team1, Team2) = CreateTeamsStats(CupData.GetFaCupGames(Datesfilter?.Est1), CupData.GetFaCupTables(Datesfilter.Est1));
         Datesfilter = new DatesFilter(LoadGames, Team1.CompetitionStart, Team2.CompetitionStart);
         StateHasChanged();
     }
 
-    (TeamStats, TeamStats) CreateTeamsStats(IEnumerable<Game>games, ILookup<string, List<string>> seasonsTables = null) 
+    (TeamStats, TeamStats) CreateTeamsStats(IEnumerable<Game>games, IEnumerable<CupTable> seasonsTables = null) 
         => (new TeamStats(Team1Name, games, seasonsTables), new TeamStats(Team2Name, games, seasonsTables));
 }

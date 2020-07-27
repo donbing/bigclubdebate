@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.InteropServices.WindowsRuntime;
 using BigClubDebate.Data.Model.DataSources;
 using BigClubDebate.Data.Model.DataTypes;
 
@@ -21,6 +20,7 @@ namespace BigClubDebate.Data.Model
 
     }
 
+
     public class BigClubPoints
     {
         /*
@@ -38,6 +38,7 @@ namespace BigClubDebate.Data.Model
         */
 
         public int OverallResult { get; }
+
         public BigClubPoints(TeamName team, IEnumerable<CupTable> faCups, IEnumerable<CupTable> leagueCups, IEnumerable<LeagueTable> leagues, IEnumerable<CupTable> championsLeagueTables = null, IEnumerable<CupTable> europaLeagueTables = null)
         {
             // winner, runner up
