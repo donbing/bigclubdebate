@@ -233,20 +233,47 @@ div.less {
 .bigGamePoints #bigGamePointsEditor {
     display: none; /* Hidden by default */
     position: fixed; /* Stay in place */
-    z-index: 1; /* Sit on top */
-    width: 500px;
-    height: 200px;
+    z-index: 800;
+    width: 1000px;
+    height: 400px;
     top: 50%;
     left: 50%;
-    margin-top: -100px; /* Negative half of height. */
-    margin-left: -250px; /* Negative half of width. */
+    margin-top: -300px; /* Negative half of height. */
+    margin-left: -500px; /* Negative half of width. */
     overflow: auto; /* Enable scroll if needed */
     background-color: rgb(0,0,0); /* Fallback color */
-    background-color: rgba(0,0,0,0.9); /* Black w/ opacity */
-    border: 2px solid blue;
-    border-radius: 0.3em;
+    background-color: rgba(0,0,0,0.90); /* Black w/ opacity */
+    border: 8px solid black;
+    border-radius: 1em;
 }
-
+#bigGamePointsEditor {
+    text-align: center;
+}
+    #bigGamePointsEditor tr td {
+        padding: .1em;
+    }
 #bigGamePointsEditor.visible {
-    display: block;
+    display: table;
 }
+#bigGamePointsEditor { border-collapse: collapse; }
+    #bigGamePointsEditor td {
+        border: 10px solid black;
+        font-weight: bold;
+        text-transform: capitalize;
+        margin: 0;
+        vertical-align: middle;
+        font-size: 40px;
+    }
+
+
+
+        #bigGamePointsEditor td.t1pts {
+            background-color: rgba(255,210,0,0.7);
+            width: 100px;
+            height: 100px;
+        }
+        #bigGamePointsEditor td.t2pts {
+            background-color: rgba(30,125,255,0.7);
+            width: 100px;
+            height: 100px;
+        }
