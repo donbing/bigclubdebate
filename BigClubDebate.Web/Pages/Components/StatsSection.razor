@@ -34,7 +34,10 @@
             @if (Expandable)
             {
                 <div class="moreInfoBar" @onclick="MoreClicked">
-                    <img height="40px" src="images/icons/DownArrow.png"/>
+                    <svg class="expansion-arrow-icon" viewBox="0 0 100 100" aria-hidden="true" focusable="false">
+                        <polyline points="18,40 50,8 82,40" fill="none" stroke="#e3e3e3" stroke-width="8" stroke-linecap="square" stroke-linejoin="miter" />
+                        <polyline points="18,60 50,92 82,60" fill="none" stroke="#e3e3e3" stroke-width="8" stroke-linecap="square" stroke-linejoin="miter" />
+                    </svg>
                 </div>
             }
         </div>

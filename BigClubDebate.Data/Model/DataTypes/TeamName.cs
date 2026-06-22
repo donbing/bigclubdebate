@@ -11,10 +11,10 @@ namespace BigClubDebate.Data.Model.DataTypes
         public bool HasImage => ImageName != null;
 
         public string MainName 
-            => this.FirstOrDefault() ?? string.Empty;
+            => this.First();
 
         public string NickName 
-            => this.Count > 1 ? this.ElementAt(1) : MainName;
+            => this.ElementAt(1);
 
         public TeamName(IEnumerable<string> names, string imageName) 
             : base(names, StringComparer.OrdinalIgnoreCase) 

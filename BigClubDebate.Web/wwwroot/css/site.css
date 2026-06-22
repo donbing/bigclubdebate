@@ -122,6 +122,13 @@ body {
     padding-bottom: .3em;
 }
 
+.moreInfoBar .expansion-arrow-icon {
+    width: 40px;
+    height: 40px;
+    display: block;
+    margin: 0 auto;
+}
+
 .middle-text ul li{
 	display: inline-block;
 }
@@ -196,10 +203,17 @@ div.less {
     text-transform: uppercase;
     border: 2px solid #ffd200;
     border-radius: 4px;
-    padding: 0.1em 0.3em;
+    padding: 0.1em 1.35em 0.1em 0.55em;
     max-width: 45%;
     font-size: 0.5em;
     cursor: pointer;
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 10 6'%3E%3Cpath d='M1 1l4 4 4-4' fill='none' stroke='%23ffffff' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-size: 0.62em auto;
+    background-position: right 0.45em center;
 }
 
 .masthead h1 select:first-child {
@@ -210,6 +224,9 @@ div.less {
     direction: rtl;
     text-align: left;
     text-align-last: left;
+    padding-left: 1.35em;
+    padding-right: 0.55em;
+    background-position: left 0.45em center;
 }
 
 .masthead h1 select option
@@ -294,3 +311,24 @@ div.less {
             width: 100px;
             height: 100px;
         }
+
+/* Keep stat values readable while preventing overflow in fixed-width tiles. */
+.stats-block .stats > li > .num {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 1.55em;
+    line-height: 1;
+    white-space: nowrap;
+    font-size: clamp(1.55rem, 5.1vw, 3.25rem);
+    font-variant-numeric: tabular-nums;
+}
+
+.stats-block .stats > li.goals > .num {
+    font-size: clamp(1.75rem, 5.6vw, 3.7rem);
+}
+
+.stats-block .stats > li.assists > .num {
+    font-size: clamp(1.4rem, 4.6vw, 2.95rem);
+}
