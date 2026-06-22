@@ -13,22 +13,22 @@ body{margin:0}h1,h2,h3,h4,h5,h6{font-weight:400}a{color:#00f}a:focus{outline:dot
     font-weight:normal;
     font-style:normal
 }
-body{font:95% Roboto, sans-serif;background:url(../../images/bodybg.jpg) center 40px fixed no-repeat #373737;color:#fff;padding-top:50px;overflow-x:hidden}
+body{font:95% Roboto, sans-serif;background:url(../backgrounds/stadium.jpg) center 40px fixed no-repeat #373737;color:#fff;padding-top:50px;overflow-x:hidden}
 @media screen and (min-width: 550px){body{padding-top:65px}}
 @media screen and (min-width: 750px){body{padding-top:110px}body.home,body.blog,body.single,body.archive,body.search{padding-top:62px}}
 @media screen and (min-width: 950px){body.home,body.blog,body.single,body.archive,body.search{padding-top:64px}}
 @media screen and (min-width: 1170px){body{padding-top:106px}}
 .container{max-width:1170px;width:100%;padding:0}
 .fw-block{width:100%;float:left}img{max-width:100%}a{color:#7ab2ef}a:hover{color:#7ab2ef}.section-title{text-transform:uppercase;text-align:center;margin-bottom:20px;padding-bottom:15px;padding-top:15px;border-top:1px solid rgba(255,255,255,0.15);border-bottom:1px solid rgba(255,255,255,0.15)}.section-title .container{padding:0 10px}.section-title h1,.section-title h2{font:900 1.8em Roboto}.section-title span{font-size:.4em;font-weight:100;padding-top:20px;opacity:.6}.section-title .lm10{float:left}.section-title .cr7{float:right}.section-title.long{position:relative}.section-title.long .lm10{position:absolute;top:60px;left:15px}.section-title.long .cr7{position:absolute;top:60px;right:15px}@media screen and (min-width: 550px){.section-title{padding:20px}.section-title h1,.section-title h2{font-size:2.5em}.section-title.long .lm10{top:80px}.section-title.long .cr7{top:80px}}@media screen and (min-width: 950px){.section-title{padding:30px}.section-title h1,.section-title h2{font-size:3em}.section-title.long .lm10{position:static}.section-title.long .cr7{position:static}}@media screen and (min-width: 1170px){.section-title h1,.section-title h2{font-size:3.2em}}.calendar-year-stats .section-title.long h1{font-size:1.4em}.calendar-year-stats .section-title.long h1 span{font-size:.55em;top:50px}@media screen and (min-width: 550px){.calendar-year-stats .section-title.long h1{font-size:2.2em}.calendar-year-stats .section-title.long h1 span{top:72px;font-size:.5em}}@media screen and (min-width: 950px){.calendar-year-stats .section-title.long h1{font-size:3em}}.world-cup-stats .section-title{margin-bottom:40px}.cta-world-cup{width:100%;padding:10px;background:rgba(255,255,255,0.2);text-align:center;color:#fff;font-weight:300;font-size:1.1em;margin-top:20px;display:block;float:left}.cta-world-cup:hover{text-decoration:none;color:#fff;background:rgba(255,255,255,0.24)}.p404{text-align:center;font:2em jack;margin:20px 0 0;padding:50px 15px;text-transform:uppercase;background:rgba(0,0,0,0.3)}.p404 span{display:block;font:300 .6em Roboto;margin-top:20px}@media screen and (min-width: 650px){.p404{font:3em jack;margin:50px 0 30px}.p404 span{font-size:.5em}}@media screen and (min-width: 750px){.p404{font:4em jack;margin:80px 0 50px}.p404 span{font-size:.4em}}header{position:relative;z-index:500}@media screen and (min-width: 1050px){header .google-rev .container{height:90px;width:728px;background:rgba(255,255,255,0.1)}}.top-bar{background:#242424;padding:8px 5px;position:fixed;top:0;left:0;z-index:510}.top-bar>.fb-like-wrap,.top-bar>.twitter-share-button{float:right;margin:13px 15px 0 0;display:none}@media screen and (min-width: 750px){.top-bar>.fb-like-wrap,.top-bar>.twitter-share-button{display:block;position:relative}.top-bar>.fb-like-wrap .fb-like-tip,.top-bar>.twitter-share-button .fb-like-tip{display:none}}@media screen and (min-width: 950px){.top-bar>.fb-like-wrap,.top-bar>.twitter-share-button{margin:13px 15px 0 0}}@media screen and (min-width: 1050px){.top-bar>.fb-like-wrap .fb-like-tip{position:absolute;left:-240px;top:-3px;background:#1e7dff;padding:5px 10px;text-align:center;font-size:.8em;font-weight:300;display:block}}@media screen and (min-width: 550px){.top-bar{padding:10px}}.outline-box{text-transform:uppercase;font-weight:300;font-size:.75em;padding:9px 0 11px;border:1px solid #494949;float:left;margin:0 1% 0 0;text-align:center}.outline-box i{font-size:1.2em;margin-right:5px}@media screen and (min-width: 550px){.outline-box{font-size:.8em;margin-bottom:0;padding:11px 15px 13px}}@media screen and (min-width: 950px){.outline-box{padding:12px 20px 14px;border:1px solid #494949;margin-right:10px}}@media screen and (min-width: 1050px){.outline-box i{font-size:1.3em}}.about-toggle{width:12%;padding:9px 0 10px;cursor:pointer}.about-toggle i{margin-right:0}.about-toggle span{display:none}@media screen and (min-width: 550px){.about-toggle{width:auto;padding:12px 20px}}@media screen and (min-width: 950px){.about-toggle{padding:13px 20px}.about-toggle i{margin-right:5px}.about-toggle span{display:inline-block}.about-toggle:hover{border-color:#5a5a5a}}.last-updated{width:70%;margin-right:1%;font-size:.7em}.last-updated span{color:#8b8b8b}@media screen and (min-width: 550px){.last-updated{width:auto;font-size:.8em}}.menu-btn{margin:0;padding:7px;width:16%;font-size:1em;cursor:pointer}.menu-btn i{margin-right:0}.menu-btn span{display:none}@media screen and (min-width: 550px){.menu-btn{width:auto;float:right;margin-top:0;margin-right:0;font-size:.9em;padding:10px 15px 12px}.menu-btn i{margin-right:5px}.menu-btn span{display:inline}}@media screen and (min-width: 850px){.menu-btn{padding:7px 12px 6px}.menu-btn i{font-size:2em;float:left;margin-right:10px}.menu-btn span{margin-top:4px;display:inline-block}}@media screen and (min-width: 950px){.menu-btn{padding:8px 11px 7px}.menu-btn:hover{border-color:#5a5a5a}}@media screen and (min-width: 1050px){.menu-btn{font-size:1em;padding:6px 11px;margin-left:15px}}.google-rev{margin:10px 0 20px;padding:0 10px}.google-rev .container{max-width:728px}@media screen and (min-width: 950px){.google-rev{margin:15px 0 20px}}@media screen and (min-width: 1050px){.google-rev{margin:20px 0}}@media screen and (min-width: 1170px){.google-rev{margin:25px 0 22px}}.blog .nav,.single .nav,.archive .nav,.search .nav{position:static}.nav{position:fixed;top:62px;left:0;width:100%;background:#111;z-index:500;max-height:40px;overflow:hidden;display:none;text-align:center;font-size:.9em;border-bottom:1px solid rgba(255,255,255,0.3)}.nav.home-nav{-webkit-transition:.3s;transition:.3s;top:-50px;display:block;opacity:0;visibility:hidden}.nav li{display:inline-block}.nav a,.nav span{color:#ddd;padding:11px 15px;display:inline-block;font-weight:300;cursor:pointer}.nav a:hover,.nav span:hover{background:#222;text-decoration:none}.nav a:focus,.nav span:focus{outline:none;text-decoration:none;background:#222}@media screen and (min-width: 750px){.nav{display:block}.nav.home-nav.on{top:62px;opacity:1;visibility:visible}}@media screen and (min-width: 950px){.nav{top:64px;max-height:44px}.nav a,.nav span{padding:13px 15px}.nav.home-nav.on{top:64px}}@media screen and (min-width: 1050px){.nav{top:64px;max-height:48px}.nav a,.nav span{padding:15px 25px}.nav.home-nav.on{top:64px}}.latest-post-cta{display:none;padding:8px;background:#000;text-align:center;font-weight:300;font-size:.9em;color:#ffd200}.latest-post-cta:hover{text-decoration:none;background:#111}.latest-post-cta span{color:#fff}.home .latest-post-cta{display:block}.fb-cta{padding:8px;background:#1e1e1e;text-align:center;font-weight:300;font-size:.8em;border-top:1px solid #333}.fb-cta .fb-like-tip{display:inline}@media screen and (min-width: 750px){.fb-cta{display:none}}
-.masthead{text-align:center;position:relative}.masthead .container{position:relative}.masthead h1{margin:15px auto 0;font:1.6em Roboto, sans-serif;text-transform:uppercase;width:75%}
+.masthead{text-align:center;position:relative}.masthead .container{position:relative}.masthead h1{margin:15px auto 0;font:1.6em Roboto, sans-serif;text-transform:uppercase;max-width:80%}
 .masthead h1 span{font-family:Roboto;font-weight:100}@media screen and (min-width: 450px){
-.masthead h1{margin-top:20px;font-size:1.9em;width:66%}}
+.masthead h1{margin-top:20px;font-size:1.9em;max-width:75%}}
 @media screen and (min-width: 550px){.masthead h1{margin-top:30px;font-size:2.3em}}
-@media screen and (min-width: 750px){.masthead h1{margin-top:50px;font-size:2.8em;width:60%}}
-@media screen and (min-width: 850px){.masthead h1{font-size:3.2em}}
-@media screen and (min-width: 950px){.masthead h1{font-size:3.8em}}
-@media screen and (min-width: 1050px){.masthead h1{margin-top:20px;font-size:4em}}
-@media screen and (min-width: 1170px){.masthead h1{font-size:4.2em}}.masthead .tagline{font-weight:300;font-size:.8em;width:60%;margin:5px auto 0}
+@media screen and (min-width: 750px){.masthead h1{margin-top:50px;font-size:2.8em;max-width:60%}}
+@media screen and (min-width: 850px){.masthead h1{font-size:3.2em;max-width:55%}}
+@media screen and (min-width: 950px){.masthead h1{font-size:3.8em;max-width:50%}}
+@media screen and (min-width: 1050px){.masthead h1{margin-top:20px;font-size:4em;max-width:45%}}
+@media screen and (min-width: 1170px){.masthead h1{font-size:4.2em;max-width:40%}}.masthead .tagline{font-weight:300;font-size:.8em;width:60%;margin:5px auto 0}
 @media screen and (min-width: 450px){.masthead .tagline{font-size:.9em;width:58%}}
 @media screen and (min-width: 550px){.masthead .tagline{width:50%;margin-top:10px}}
 @media screen and (min-width: 750px){.masthead .tagline{font-size:1em;width:45%}}
@@ -107,7 +107,6 @@ ul li {
 body {
     background-color: black;
     overflow-x: hidden;
-    overflow-y: hidden;
     min-height: 100%;
     width: 100%;
     background-size: cover;
@@ -131,6 +130,7 @@ body {
 }
 .middle-text img{
 	background-color: lightgray;
+	border: 2px solid #ffd200;
 	border-radius: 15px;
 	margin: .3em;
 	padding: .3em;
@@ -177,28 +177,45 @@ div.less {
     overflow: auto;
     left: 0px;
 }
-.masthead h1 select:first-child {
-    text-align-last: right;
+.masthead h1 {
+    width: auto;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.3em;
+    z-index: 20;
 }
 
-.masthead h1 select option
-{
-    background-color: transparent;
-    color: black;
-    font-size: 0.5em;
+.masthead h1 span {
+    flex-shrink: 0;
 }
 
 .masthead h1 select {
     background-color: transparent;
     color: white;
     text-transform: uppercase;
-    border: none;
-    display: inline;
+    border: 2px solid #ffd200;
+    border-radius: 4px;
+    padding: 0.1em 0.3em;
+    max-width: 45%;
+    font-size: 0.5em;
+    cursor: pointer;
 }
-.masthead h1 {
-    width: auto;
-    display:inline;
-    z-index: 20;
+
+.masthead h1 select:first-child {
+    text-align-last: right;
+}
+
+.masthead h1 select:last-child {
+    direction: rtl;
+    text-align: left;
+    text-align-last: left;
+}
+
+.masthead h1 select option
+{
+    background-color: #333;
+    color: white;
 }
 .stats-block .type {
     white-space: nowrap;

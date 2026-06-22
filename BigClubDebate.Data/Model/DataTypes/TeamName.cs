@@ -8,12 +8,13 @@ namespace BigClubDebate.Data.Model.DataTypes
     {
         public string ImageName { get; }
         public string BackGroundName { get; }
+        public bool HasImage => ImageName != null;
 
         public string MainName 
-            => this.First();
+            => this.FirstOrDefault() ?? string.Empty;
 
         public string NickName 
-            => this.ElementAt(1);
+            => this.Count > 1 ? this.ElementAt(1) : MainName;
 
         public TeamName(IEnumerable<string> names, string imageName) 
             : base(names, StringComparer.OrdinalIgnoreCase) 
@@ -23,11 +24,24 @@ namespace BigClubDebate.Data.Model.DataTypes
             : base(names, StringComparer.OrdinalIgnoreCase) 
                 => (ImageName, BackGroundName) = (imageName,backGroundName);
 
+        /// <summary>
+        /// Creates a TeamName without a badge image or background.
+        /// </summary>
+        public TeamName(string name) 
+            : base(new[] { name, name }, StringComparer.OrdinalIgnoreCase) 
+        {
+            ImageName = null;
+            BackGroundName = null;
+        }
+
         public bool PlayedIn(Game game) 
             => game.Teams.Any(Matches);
 
         public bool Matches(string otherName) 
             => Contains(otherName);
+
+        public override string ToString()
+            => MainName;
 
         public override bool Equals(object obj)
             => obj is TeamName name && MainName == name.MainName;

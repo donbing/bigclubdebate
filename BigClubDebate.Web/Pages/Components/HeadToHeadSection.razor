@@ -16,34 +16,25 @@
     public TeamStats Team1 { get; set; }
     public TeamStats Team2 { get; set; }
 
-    TeamName team1, team2;
-    [Parameter]
-    public TeamName Team1Name 
-    {
-        get => team1;
-        set
-        {
-            if (Datesfilter != null)
-                Datesfilter.Est2 = null;
-            team1 = value;
-        }
-    }
+    private TeamName _oldTeam1Name, _oldTeam2Name;
 
     [Parameter]
-    public TeamName Team2Name 
-    {
-        get => team2;
-        set
-        {
-            if (Datesfilter != null)
-                Datesfilter.Est2 = null;
-            team2 = value;
-        }
-    }
+    public TeamName Team1Name { get; set; }
 
+    [Parameter]
+    public TeamName Team2Name { get; set; }
 
     protected override void OnParametersSet()
     {
+        if (Team1Name != _oldTeam1Name || Team2Name != _oldTeam2Name)
+        {
+            if (Datesfilter != null)
+                Datesfilter.Est2 = null;
+
+            _oldTeam1Name = Team1Name;
+            _oldTeam2Name = Team2Name;
+        }
+
         if (Team1Name != null && Team2Name != null)
         {
             LoadGames();

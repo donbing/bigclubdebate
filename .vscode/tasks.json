@@ -1,0 +1,14 @@
+{
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"label": "build data app",
+			"type": "shell",
+			"command": "dotnet build BigClubDebate.Data/BigClubDebate.Data.csproj",
+			"problemMatcher": [
+				"$tsc"
+			],
+			"group": "build"
+		}
+	]
+}

@@ -14,10 +14,9 @@ namespace BigClubDebate.Data
         private static readonly Teams Teams = new Teams();
 
         static void Main(string[] args)
-        {/*
-            var path = Path.Combine(Directory.GetCurrentDirectory(), "..", "..", "..", "..", "content", "GameData");
-
-            var openFootballEnglishLeagueReader = new FootyDataReader(new FootballDataFolderConfig(path));
+        {
+            var config = FootballDataFolderConfig.FromEntryAssemblyPath();
+            var openFootballEnglishLeagueReader = new FootyDataReader(config);
 
             var leagueSeasons = openFootballEnglishLeagueReader.LeagueSeasons;
             var facup = openFootballEnglishLeagueReader.FaCupGames;
@@ -25,20 +24,16 @@ namespace BigClubDebate.Data
             var utd = new TeamStats(Teams.SheffUtd, leagueSeasons.SelectMany(x => x), Standings(facup));
             var weds = new TeamStats(Teams.SheffWeds, leagueSeasons.SelectMany(x => x), Standings(facup));
 
-            Console.WriteLine($"{utd.Name} wins:{utd.CompetitionWins}");
-            Console.WriteLine($"{utd.Name} wins:{utd.Last10CompetitionWinDates.ToList()}");
-            Console.WriteLine($"{weds.Name} wins:{weds.CompetitionWins}");
-            */
+            Console.WriteLine($"{utd.Name} wins: {utd.CompetitionWins}");
+            Console.WriteLine($"{utd.Name} win dates: {string.Join(", ", utd.Last10CompetitionWinDates)}");
+            Console.WriteLine($"{weds.Name} wins: {weds.CompetitionWins}");
         }
         
-        /*
         static IEnumerable<CupTable> Standings(IEnumerable<CupGame> cupGames) =>
-            cupGames.GroupBy(x => x.Season)
-                .ToLookup(
-                    year => year.Key,
-                    year => new CupTable(year).ToList()
-                );
-        */
+            cupGames
+                .GroupBy(x => x.Season)
+                .Select(year => new CupTable(year));
+        
         private static void ShowStats(TeamStats utd, TeamStats weds)
         {
             Console.WriteLine($"{utd.Name} wins:{utd.Wins}");

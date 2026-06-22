@@ -1,0 +1,36 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Launch Data App",
+            "type": "coreclr",
+            "request": "launch",
+            "preLaunchTask": "build data app",
+            "program": "${workspaceFolder}/BigClubDebate.Data/bin/Debug/net10.0/BigClubDebate.Data.dll",
+            "args": [],
+            "cwd": "${workspaceFolder}/BigClubDebate.Data/bin/Debug/net10.0",
+            "stopAtEntry": false,
+            "console": "internalConsole"
+        },
+        {
+            "name": "Launch Web App",
+            "type": "coreclr",
+            "request": "launch",
+            "preLaunchTask": "build",
+            "program": "${workspaceFolder}/BigClubDebate.Web/bin/Debug/net10.0/BigClubDebate.Web.dll",
+            "args": [],
+            "cwd": "${workspaceFolder}/BigClubDebate.Web",
+            "stopAtEntry": false,
+            "serverReadyAction": {
+                "action": "openExternally",
+                "pattern": "\\bNow listening on:\\s+(https?://\\S+)"
+            },
+            "env": {
+                "ASPNETCORE_ENVIRONMENT": "Development"
+            },
+            "sourceFileMap": {
+                "/Views": "${workspaceFolder}/Views"
+            }
+        }
+    ]
+}
