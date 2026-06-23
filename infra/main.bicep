@@ -7,7 +7,13 @@ param location string = 'northeurope'
 param environmentName string = 'prod'
 
 @description('Unique suffix for global resource names.')
-param uniqueSuffix string = uniqueString(resourceGroup().id)
+param uniqueSuffix string = uniqueString(subscription().id, environmentName)
+
+@description('App Service Plan SKU name (F1, B1, etc.).')
+param appServicePlanSkuName string = 'F1'
+
+@description('App Service Plan SKU tier (Free, Basic, etc.).')
+param appServicePlanSkuTier string = 'Free'
 
 // ── Resource Group ──────────────────────────────────────────
 resource resourceGroup 'Microsoft.Resources/resourceGroups@2024-03-01' = {
@@ -23,8 +29,8 @@ module appServicePlan 'modules/appserviceplan.bicep' = {
     name: 'plan-bigclubdebate-${environmentName}'
     location: location
     sku: {
-      name: 'B1'
-      tier: 'Basic'
+      name: appServicePlanSkuName
+      tier: appServicePlanSkuTier
     }
   }
 }

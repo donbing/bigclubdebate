@@ -12,7 +12,6 @@ resource webApp 'Microsoft.Web/sites@2023-12-01' = {
     httpsOnly: true
     siteConfig: {
       linuxFxVersion: 'DOTNETCORE|10.0'
-      alwaysOn: true
       ftpsState: 'Disabled'
       appSettings: [
         {

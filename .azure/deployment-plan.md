@@ -1,6 +1,6 @@
 # Big Club Debate — Azure Deployment Plan
 
-**Status**: ✅ Ready for Validation
+**Status**: ✅ Validated — Ready for Deployment
 
 ## Files Generated
 
@@ -8,7 +8,7 @@
 |------|---------|
 | `azure.yaml` | AZD project configuration |
 | `infra/main.bicep` | Subscription-scoped: Resource Group + App Service Plan + App Service |
-| `infra/modules/appserviceplan.bicep` | Linux B1 App Service Plan |
+| `infra/modules/appserviceplan.bicep` | Linux F1 App Service Plan |
 | `infra/modules/appservice.bicep` | Linux App Service with .NET 10, managed identity |
 | `infra/main.parameters.json` | Environment parameters |
 | `azure-pipelines.yml` | CI/CD: Build → Test → Publish → Deploy to App Service |
@@ -20,7 +20,20 @@
 ## Prerequisites Before Deploy
 - [ ] Create Azure DevOps Service Connection named `XvsY`
 - [ ] Run `azd up` or deploy the Bicep to create resources
-- [ ] App Service name: `app-bigclubdebate-prod-{unique}`
+
+## Section 7: Validation Proof
+
+| Check | Result |
+|-------|--------|
+| Bicep compilation (`main.bicep`) | ✅ No errors |
+| Bicep compilation (`appserviceplan.bicep`) | ✅ No errors |
+| Bicep compilation (`appservice.bicep`) | ✅ No errors |
+| `dotnet build BigClubDebate.sln` | ✅ 0 errors, 8 warnings |
+| ARM template validation (West Europe) | ✅ Succeeded |
+| AZD installed (`azd version`) | ✅ v1.23.8 |
+| Quota: North Europe | ❌ 0 quota |
+| Quota: UK South | ❌ 0 quota |
+| Quota: West Europe | ✅ Passed |
 
 ## Application
 - **Name**: Big Club Debate
@@ -32,13 +45,13 @@
 
 | Service | SKU | Reason |
 |---------|-----|--------|
-| App Service (Linux) | B1 Basic | Cheapest tier supporting WebSocket/SignalR, always-on |
-| App Service Plan | B1 Basic | Single app, no scaling needed |
+| App Service (Linux) | F1 Free | Free tier, supports WebSocket/SignalR |
+| App Service Plan | F1 Free | Single app, no scaling needed |
 
 ## Azure Context
-- **Subscription**: lovebot (`c7b18c0b-fc2a-444d-b663-97be433b5eda`)
+- **Subscription**: AzureSub1 (`5f6e7c8b-7f8f-44ec-a5d7-97d26f3d3f0f`)
 - **Tenant**: `99e12b7f-f4ac-4dcf-bdb8-75e1e371c49b`
-- **Region**: North Europe (Ireland)
+- **Region**: West Europe (Netherlands)
 
 ## Infrastructure
 - **IaC Format**: Bicep (`infra/`)
