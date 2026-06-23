@@ -12,7 +12,8 @@ namespace BigClubDebate.Web.Pages.Components
 
         public DatesFilter(Action loadGames)
         {
-            PropertyChanged += (o,s) => loadGames();
+            if (loadGames != null)
+                PropertyChanged += (o,s) => loadGames();
         }
 
         public DatesFilter(Action loadGames, DateTime? team1CompetitionStart, DateTime? team2CompetitionStart)

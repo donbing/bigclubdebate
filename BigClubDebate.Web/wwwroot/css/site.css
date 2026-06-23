@@ -3,7 +3,7 @@
 abbr,address,article,aside,audio,b,blockquote,body,canvas,caption,cite,code,dd,del,details,dfn,div,dl,dt,em,fieldset,figcaption,figure,footer,form,h1,h2,h3,h4,h5,h6,header,hgroup,html,i,img,ins,kbd,label,legend,li,mark,menu,nav,object,ol,p,pre,q,samp,section,small,span,strong,sub,summary,sup,table,tbody,td,tfoot,th,thead,time,tr,ul,var,video{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:0 0}
 article,aside,details,figcaption,figure,footer,header,hgroup,nav,section{display:block}
 
-html{font-size:100%;overflow-y:scroll;-webkit-text-size-adjust:100%;-ms-text-size-adjust:100%}
+html{font-size:100%;overflow-y:auto;-webkit-text-size-adjust:100%;-ms-text-size-adjust:100%}
 body{margin:0}h1,h2,h3,h4,h5,h6{font-weight:400}a{color:#00f}a:focus{outline:dotted thin}
 
 @font-face{
@@ -34,7 +34,7 @@ body{font:95% Roboto, sans-serif;background:url(../backgrounds/stadium.jpg) cent
 @media screen and (min-width: 750px){.masthead .tagline{font-size:1em;width:45%}}
 @media screen and (min-width: 850px){.masthead .tagline{width:40%}}
 @media screen and (min-width: 950px){.masthead .tagline{width:50%}}
-@media screen and (min-width: 1050px){.masthead .tagline{font-size:1.1em}}.main-img.team1{position:absolute;top:0px;left:-55px;max-width:37.5%}.main-img.team1.msn{left:-25px}
+@media screen and (min-width: 1050px){.masthead .tagline{font-size:1.1em}}.masthead .global-date{font-weight:300;font-size:.8em;margin-top:8px}.masthead .global-date .year-select{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.3);color:#fff;padding:2px 6px;border-radius:4px;width:80px;text-align:center;font-size:1em;appearance:none;-webkit-appearance:none;cursor:pointer}.masthead .global-date .year-select option{color:#000;background:#fff}.main-img.team1{position:absolute;top:0px;left:-55px;max-width:37.5%}.main-img.team1.msn{left:-25px}
 @media screen and (min-width: 750px){.main-img.team1{max-width:45%;left:-95px;top:-10px}.main-img.team1.msn{left:-65px}}
 @media screen and (min-width: 950px){.main-img.team1{left:-115px;top:0px}}
 @media screen and (min-width: 1050px){.main-img.team1{left:-175px;top:-110px}.main-img.team1.msn{top:-30px}}
@@ -57,7 +57,7 @@ body{font:95% Roboto, sans-serif;background:url(../backgrounds/stadium.jpg) cent
 @media screen and (min-width: 1050px){.middle-text{font-size:1.1em;top:35px}.middle-text.other-cups-spain{top:20px}.middle-text.europe-all-time{top:30px}.middle-text.other-cups-all-time{top:25px}}
 @media screen and (min-width: 1170px){.middle-text{width:260px;left:50%;margin-left:-130px}.middle-text.other-cups-all-time{top:20px;width:260px;left:50%}}
 .stats{float:left;width:50%;margin:15px 0}.stats>li{display:inline-block;width:24%;z-index:10}.stats>li>span{display:block}.stats .goals{width:30%}
-.stats .num{font-weight:900;font-size:1.8em;padding:5px;text-shadow:2px 2px 0 rgba(0,0,0,0.1);position:relative}
+.stats .num{font-weight:900;font-size:1.8em;padding:5px;text-shadow:2px 2px 0 rgba(0,0,0,0.1);position:relative;border-radius:4px}
 .stats .num small{font-size:.4em;position:absolute;top:5px;right:10px}.stats .goals .num{font-size:2.2em}.stats .type{text-transform:uppercase;font-weight:300;font-size:.6em;margin-top:3px}
 .stats.team1 .num{background:rgba(255,210,0,0.7)}.stats.team1 .num:hover{background:rgba(255,210,0,0.8)}.stats.team2 .num{background:rgba(30,125,255,0.7)}.stats.team2 .num:hover{background:rgba(30,125,255,0.8)}
 .stats .plus{position:absolute;top:-5px;right:-5px;z-index:401;width:15px;height:15px;background:#fff;color:#111;border-radius:50%;font-size:.8em;text-align:center;cursor:pointer;line-height:1.3}
@@ -107,11 +107,14 @@ ul li {
 body {
     background-color: black;
     overflow-x: hidden;
+    overflow-y: hidden;
+    overflow-y: clip;
     min-height: 100%;
     width: 100%;
     background-size: cover;
     background-repeat: no-repeat;
 }
+
 .moreInfoBar {
     text-align: center;
     color: white;

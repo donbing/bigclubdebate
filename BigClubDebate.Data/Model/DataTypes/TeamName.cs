@@ -14,7 +14,7 @@ namespace BigClubDebate.Data.Model.DataTypes
             => this.First();
 
         public string NickName 
-            => this.ElementAt(1);
+            => this.Skip(1).FirstOrDefault() ?? MainName;
 
         public TeamName(IEnumerable<string> names, string imageName) 
             : base(names, StringComparer.OrdinalIgnoreCase) 

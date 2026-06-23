@@ -11,20 +11,6 @@
     <section class="stats-section fw-block" style="margin-bottom: 25px;">
 
         <div class="year-bar fw-block stats-header">
-            @if (Team1.CompetitionStart.HasValue)
-            {
-                <p class="stats team1">
-                    est
-                    <input class="year" @bind="@Datesfilter.Est1" @bind:format="yyyy"/>
-                </p>
-            }
-            @if (Team2.CompetitionStart.HasValue)
-            {
-                <p class="stats team2">
-                    est
-                    <input class="year" @bind="@Datesfilter.Est2" @bind:format="yyyy"/>
-                </p>
-            }
             <h2>@SectionName</h2>
         </div>
         <div class="fw-block has-full-stats">

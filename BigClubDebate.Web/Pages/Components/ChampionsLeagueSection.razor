@@ -1,0 +1,39 @@
+@using BigClubDebate.Data
+@using BigClubDebate.Data.Model
+@using BigClubDebate.Data.Model.DataSources
+@using BigClubDebate.Data.Model.DataTypes
+
+@inject EuropeanCupGames EuroData
+
+    <StatsSection SectionName="Champions League" Team1="Team1" Team2="Team2" Datesfilter="DatesFilter">
+        <CompetitionResults Team1="Team1" Team2="Team2"></CompetitionResults>
+        <GameResults Team1="Team1" Team2="Team2"></GameResults>
+        <GoalResults Team1="Team1" Team2="Team2"></GoalResults>
+    </StatsSection>
+
+@code {
+    public TeamStats Team1 { get; set; }
+    public TeamStats Team2 { get; set; }
+
+    [Parameter]
+    public TeamName Team1Name { get; set; }
+
+    [Parameter]
+    public TeamName Team2Name { get; set; }
+
+    [Parameter]
+    public DatesFilter DatesFilter { get; set; }
+    
+    protected override void OnParametersSet()
+    {
+        LoadGames();
+    }
+
+    void LoadGames()
+    {
+        var games = EuroData.GetChampionsLeagueGames(DatesFilter?.Est1);
+        var seasonsTables = EuroData.GetChampionsLeagueTables(games, DatesFilter?.Est1);
+        (Team1, Team2) = (new TeamStats(Team1Name, games, seasonsTables), new TeamStats(Team2Name, games, seasonsTables));
+        StateHasChanged();
+    }
+}

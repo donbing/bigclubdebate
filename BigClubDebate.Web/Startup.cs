@@ -19,9 +19,12 @@ namespace BigClubDebate.Web
 {
     public class Startup
     {
-        public Startup(IConfiguration configuration)
+        private readonly IWebHostEnvironment _env;
+
+        public Startup(IConfiguration configuration, IWebHostEnvironment env)
         {
             Configuration = configuration;
+            _env = env;
         }
 
         public IConfiguration Configuration { get; }
@@ -31,9 +34,16 @@ namespace BigClubDebate.Web
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddRazorPages();
-            services.AddServerSideBlazor();
+            services.AddServerSideBlazor()
+                .AddCircuitOptions(options => options.DetailedErrors = _env.IsDevelopment());
             services.AddSingleton(s => FootballDataFolderConfig.FromEntryAssemblyPath());
             services.AddSingleton<FootyDataReader>();
+            services.AddSingleton<IGameDataProvider>(s => s.GetRequiredService<FootyDataReader>());
+            services.AddSingleton(s => new TransfermarktCsvReader(
+                s.GetRequiredService<FootballDataFolderConfig>().TransfermarktGamesCsvPath));
+            services.AddSingleton(s => new ChampsCsvReader(
+                s.GetRequiredService<FootballDataFolderConfig>().EngSoccerDataChampsCsvPath));
+            services.AddSingleton<EuropeanCupGames>();
             services.AddSingleton<Teams>();
             services.AddSingleton<WittyTagLineGenerator>();
             services.AddSingleton<LeagueGames>();

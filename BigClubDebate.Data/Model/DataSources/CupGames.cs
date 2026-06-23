@@ -32,10 +32,10 @@ namespace BigClubDebate.Data.Model.DataSources
         public IEnumerable<CupTable> GetLeagueCupTables(DateTime? startDate = null) 
             => _leagueCupTables.Where(x => !startDate.HasValue || x.StartDate >= startDate.Value.Year);
 
-        public CupGames(FootyDataReader data)
+        public CupGames(IGameDataProvider data)
         {
-            _faCupGames = data.FaCupGames; 
-            leagueCupGames = data.LeagueCupGames;
+            _faCupGames = data.GetFaCupGames(); 
+            leagueCupGames = data.GetLeagueCupGames();
             _faCupTables = GetSeasonsTables(GetFaCupGames());
             _leagueCupTables = GetSeasonsTables(leagueCupGames);
         }

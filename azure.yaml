@@ -1,0 +1,8 @@
+name: bigclubdebate
+metadata:
+  template: azd-init@1.0.0
+services:
+  web:
+    project: ./BigClubDebate.Web/BigClubDebate.Web.csproj
+    host: appservice
+    language: dotnet

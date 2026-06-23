@@ -3,6 +3,19 @@ using System.Linq;
 
 namespace BigClubDebate.Data.Model.DataTypes
 {
+    public enum CompetitionType
+    {
+        DomesticLeague,
+        FACup,
+        LeagueCup,
+        ChampionsLeague,
+        ChampionsLeagueQualifying,
+        EuropaLeague,
+        EuropaLeagueQualifying,
+        ConferenceLeague,
+        ConferenceLeagueQualifying
+    }
+
     public class Game : Fixture
     {
         public DateTime Date { get; set; }
@@ -24,6 +37,10 @@ namespace BigClubDebate.Data.Model.DataTypes
             => AwayGoals + HomeGoals;
 
         public string Division { get; set; }
+
+        public CompetitionType? Competition { get; set; }
+
+        public string Round { get; set; }
 
         public int PointsFor(TeamName teamName)
         {
