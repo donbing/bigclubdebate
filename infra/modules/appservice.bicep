@@ -11,8 +11,9 @@ resource webApp 'Microsoft.Web/sites@2023-12-01' = {
     serverFarmId: appServicePlanId
     httpsOnly: true
     siteConfig: {
-      linuxFxVersion: 'DOTNETCORE|10.0'
+      linuxFxVersion: 'DOTNETCORE:10.0'
       ftpsState: 'Disabled'
+      webSocketsEnabled: true
       appSettings: [
         {
           name: 'ASPNETCORE_ENVIRONMENT'
