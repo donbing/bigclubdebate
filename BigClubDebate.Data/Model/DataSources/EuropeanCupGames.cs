@@ -45,22 +45,31 @@ namespace BigClubDebate.Data.Model.DataSources
         {
             var games = new List<Game>();
 
-            // Historical CL from engsoccerdata (1955-2017)
+            // Historical CL from engsoccerdata (1955-2017) — lower priority
             games.AddRange(champsReader.GetAllGames());
 
-            // Recent CL/EL/UCOL from Transfermarkt (2012-present), deduped against historical
-            var existingKeys = new HashSet<(DateTime, string, string)>();
+            // Recent CL/EL/UCOL from Transfermarkt (2012-present), deduped against historical.
+            // Transfermarkt has higher SourcePriority (2 vs 1) so it wins when both have the same game.
+            var gameMap = new Dictionary<(DateTime, string, string), Game>();
             foreach (var g in games)
-                existingKeys.Add((g.Date, g.Home, g.Away));
+                gameMap[(g.Date, g.Home, g.Away)] = g;
 
             foreach (var g in transfermarktReader.GetAllEuropeanGames())
             {
                 var key = (g.Date, g.Home, g.Away);
-                if (existingKeys.Add(key))
-                    games.Add(g);
+                if (gameMap.TryGetValue(key, out var existing))
+                {
+                    // Keep the higher-priority source
+                    if (g.SourcePriority > existing.SourcePriority)
+                        gameMap[key] = g;
+                }
+                else
+                {
+                    gameMap[key] = g;
+                }
             }
 
-            _allGames = games;
+            _allGames = gameMap.Values.ToList();
         }
 
         public IEnumerable<Game> GetChampionsLeagueGames(DateTime? startDate = null)

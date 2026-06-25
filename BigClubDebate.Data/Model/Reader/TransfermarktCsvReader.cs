@@ -105,30 +105,76 @@ namespace BigClubDebate.Data.Model.Reader
 
             return new Game
             {
-                Date        = date,
-                Season      = cols[2].Trim(),
-                Home        = NormalizeTeamName(cols[19]),
-                Away        = NormalizeTeamName(cols[20]),
-                HomeGoals   = ParseInt(cols[7]),
-                AwayGoals   = ParseInt(cols[8]),
-                Division    = competitionId,
-                Competition = compType,
-                Round       = cols[3].Trim()
+                Date           = date,
+                Season         = cols[2].Trim(),
+                Home           = NormalizeTeamName(cols[19]),
+                Away           = NormalizeTeamName(cols[20]),
+                HomeGoals      = ParseInt(cols[7]),
+                AwayGoals      = ParseInt(cols[8]),
+                Division       = competitionId,
+                Competition    = compType,
+                Round          = cols[3].Trim(),
+                SourcePriority = 2 // higher priority than ChampsCsvReader (which has 1)
             };
         }
 
         /// <summary>
-        /// Strips Transfermarkt's "Football Club" / "FC" suffixes so names match
-        /// our existing alias system (e.g. "Manchester City Football Club" → "Manchester City").
+        /// Normalizes Transfermarkt club names to match the engsoccerdata naming conventions
+        /// and our alias system. Handles Spanish, German, Italian, French, Dutch, Portuguese,
+        /// and English naming patterns.
         /// </summary>
         static string NormalizeTeamName(string raw)
         {
             var name = raw.Trim();
-            // "Manchester City Football Club" → "Manchester City"
+
+            // Remove common long suffixes first
             if (name.EndsWith(" Football Club", StringComparison.OrdinalIgnoreCase))
                 name = name.Substring(0, name.Length - " Football Club".Length);
-            // "AFC Ajax Amsterdam" → "AFC Ajax" (but not "Liverpool FC" yet)
-            // Keep the rest as-is for non-English clubs
+            else if (name.EndsWith(" Futbol Club", StringComparison.OrdinalIgnoreCase))
+                name = name.Substring(0, name.Length - " Futbol Club".Length);
+            else if (name.EndsWith(" Futebol Clube", StringComparison.OrdinalIgnoreCase))
+                name = name.Substring(0, name.Length - " Futebol Clube".Length);
+
+            // Spanish: "Club Atlético de Madrid S.A.D." → "Atletico Madrid"
+            // "Real Madrid Club de Fútbol" → "Real Madrid"
+            if (name.StartsWith("Club ", StringComparison.OrdinalIgnoreCase))
+                name = name.Substring(5).Trim();
+            if (name.EndsWith(" S.A.D.", StringComparison.OrdinalIgnoreCase))
+                name = name.Substring(0, name.Length - " S.A.D.".Length);
+            if (name.EndsWith(" SAD", StringComparison.OrdinalIgnoreCase))
+                name = name.Substring(0, name.Length - " SAD".Length);
+            if (name.EndsWith(" Club de Fútbol", StringComparison.OrdinalIgnoreCase))
+                name = name.Substring(0, name.Length - " Club de Fútbol".Length);
+            if (name.EndsWith(" Club de Futbol", StringComparison.OrdinalIgnoreCase))
+                name = name.Substring(0, name.Length - " Club de Futbol".Length);
+            if (name.Equals("Atlético de Madrid", StringComparison.OrdinalIgnoreCase))
+                name = "Atletico Madrid";
+
+            // German: "FC Bayern München" → "Bayern Munich", "Borussia Dortmund" stays
+            if (name.StartsWith("FC ", StringComparison.OrdinalIgnoreCase))
+                name = name.Substring(3).Trim();
+            if (name.StartsWith("FC ", StringComparison.OrdinalIgnoreCase))
+                name = name.Substring(3).Trim(); // second pass for "FC " prefixes
+            // Normalize German umlauts
+            name = name.Replace("München", "Munich")
+                       .Replace("Köln", "Koln")
+                       .Replace("Nürnberg", "Nurnberg");
+
+            // French: "Paris Saint-Germain Football Club" → "Paris Saint-Germain" (already handled above)
+            // Italian: "Juventus Football Club" → "Juventus" (already handled above)
+            // Dutch: "AFC Ajax" → stripped "AFC " below
+
+            // Remove common short suffixes
+            if (name.EndsWith(" FC", StringComparison.OrdinalIgnoreCase))
+                name = name.Substring(0, name.Length - " FC".Length);
+
+            // Remove common short prefixes
+            if (name.StartsWith("AFC ", StringComparison.OrdinalIgnoreCase))
+                name = name.Substring(4).Trim();
+
+            // Remove trailing periods from abbreviations
+            name = name.TrimEnd('.');
+
             return name;
         }
 

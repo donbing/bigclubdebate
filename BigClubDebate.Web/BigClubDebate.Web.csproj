@@ -17,10 +17,11 @@
 
   <ItemGroup>
     <ProjectReference Include="..\BigClubDebate.Data\BigClubDebate.Data.csproj" />
+    <ProjectReference Include="..\BigClubDebate.ServiceDefaults\BigClubDebate.ServiceDefaults.csproj" />
   </ItemGroup>
  
   <ItemGroup>
-    <Content Include="..\Content\GameData\**">
+    <Content Include="GameData\**">
       <Link>GameData\%(RecursiveDir)%(FileName)%(Extension)</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>

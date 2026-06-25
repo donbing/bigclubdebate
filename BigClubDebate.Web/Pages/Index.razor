@@ -42,41 +42,21 @@ else
                 <img class="main-img team2" src="images/badges/@Team2.ImageName" alt="@Team2.MainName badge" />
             }
             <p class="tagline">@tagLine</p>
-            <p class="global-date">
-                since
-                <select class="year-select" @bind="GlobalFilterYear" @bind:after="OnYearChanged">
-                    @for (int y = DateTime.Now.Year; y >= 1945; y--)
-                    {
-                        <option value="@y">@y</option>
-                    }
-                </select>
-            </p>
         </div>
     </section>
 
     <BigGamePointsSection/>
 
-    <HeadToHeadSection Team1Name="Team1" Team2Name="Team2" DatesFilter="GlobalFilter" />
-    <LeagueSection Team1Name="Team1" Team2Name="Team2" DatesFilter="GlobalFilter" />
-    <LeagueCupSection Team1Name="Team1" Team2Name="Team2" DatesFilter="GlobalFilter" />
-    <FaCupSection Team1Name="Team1" Team2Name="Team2" DatesFilter="GlobalFilter" />
-    <ChampionsLeagueSection Team1Name="Team1" Team2Name="Team2" DatesFilter="GlobalFilter" />
-    <EuropaLeagueSection Team1Name="Team1" Team2Name="Team2" DatesFilter="GlobalFilter" />
-    <ConferenceLeagueSection Team1Name="Team1" Team2Name="Team2" DatesFilter="GlobalFilter" />
+    <HeadToHeadSection Team1Name="Team1" Team2Name="Team2" />
+    <LeagueSection Team1Name="Team1" Team2Name="Team2" />
+    <LeagueCupSection Team1Name="Team1" Team2Name="Team2" />
+    <FaCupSection Team1Name="Team1" Team2Name="Team2" />
 }
 
 @code {
 
     public TeamName Team1 { get; set; }
     public TeamName Team2 { get; set; }
-    public DatesFilter GlobalFilter { get; set; } = new DatesFilter(null) { Est1 = new DateTime(1945, 1, 1) };
-    public int GlobalFilterYear { get; set; } = 1945;
-
-    private void OnYearChanged()
-    {
-        GlobalFilter.Est1 = new DateTime(GlobalFilterYear, 1, 1);
-        LoadData();
-    }
 
     public string Team1Name => Team1?.MainName ?? AllTeams.SheffUtd.MainName;
     public string Team2Name => Team2?.MainName ?? AllTeams.SheffWeds.MainName;
@@ -86,7 +66,7 @@ else
         var value = e.Value?.ToString();
         if (Team1?.MainName != value)
         {
-            Team1 = AllTeams.FirstOrDefault(x => x.MainName == value);
+            Team1 = AllTeams.SingleOrDefault(x => x.MainName == value);
             await LoadData();
         }
     }
@@ -96,7 +76,7 @@ else
         var value = e.Value?.ToString();
         if (Team2?.MainName != value)
         {
-            Team2 = AllTeams.FirstOrDefault(x => x.MainName == value);
+            Team2 = AllTeams.SingleOrDefault(x => x.MainName == value);
             await LoadData();
         }
     }

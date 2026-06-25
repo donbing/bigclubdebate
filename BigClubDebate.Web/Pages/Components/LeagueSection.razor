@@ -5,7 +5,7 @@
 
 @inject LeagueGames LeagueData
 
-    <StatsSection SectionName="Division 1 / Premiership" Team1="Team1" Team2="Team2" Datesfilter="DatesFilter">
+    <StatsSection SectionName="Division 1 / Premiership" Team1="Team1" Team2="Team2" Datesfilter="Datesfilter">
         <CompetitionResults Team1="Team1" Team2="Team2">
             @*<ul class="middle_opts">
                 <li><a title="Players" href="#playersModal"><img width="40px" src="images/icons/player.png" /><div class="extraStats">foo</div></a></li>
@@ -19,6 +19,7 @@
 
 @code {
 
+    public DatesFilter Datesfilter { get; set; }
     public TeamStats Team1{ get; set; }
     public TeamStats Team2 { get; set; }
 
@@ -29,14 +30,14 @@
 
     [Parameter]
     public TeamName Team2Name { get; set; }
-
-    [Parameter]
-    public DatesFilter DatesFilter { get; set; }
     
     protected override void OnParametersSet()
     {
         if (Team1Name != _oldTeam1Name || Team2Name != _oldTeam2Name)
         {
+            if (Datesfilter != null)
+                Datesfilter.Est2 = null;
+
             _oldTeam1Name = Team1Name;
             _oldTeam2Name = Team2Name;
         }
@@ -46,9 +47,10 @@
 
     void LoadGames()
     {
-        var games = LeagueData.DivisionGames(1, DatesFilter?.Est1);
-        var seasonsTables = LeagueData.DivisionTables(games);
+        var games = LeagueData.DivisionGames(1, Datesfilter?.Est1);
+        var seasonsTables = LeagueData.DivisionTables(1, Datesfilter?.Est1);
         (Team1, Team2) = (new TeamStats(Team1Name, games, seasonsTables), new TeamStats(Team2Name, games, seasonsTables));
+        Datesfilter = new DatesFilter(LoadGames, Team1.CompetitionStart, Team2.CompetitionStart);
         StateHasChanged();
     }
 

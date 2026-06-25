@@ -1,5 +1,5 @@
 # Big Club Debate — CI/CD Pipeline
-# Builds .NET 10 Blazor Server app, runs tests, deploys to Azure App Service (Linux)
+# Builds .NET 10 Blazor Server app with Aspire orchestration, runs tests, deploys to Azure App Service (Linux)
 
 trigger:
   - master
@@ -11,7 +11,9 @@ variables:
   buildConfiguration: 'Release'
   dotnetVersion: '10.x'
   webProject: 'BigClubDebate.Web/BigClubDebate.Web.csproj'
+  appHostProject: 'BigClubDebate.AppHost/BigClubDebate.AppHost.csproj'
   publishPath: '$(Build.ArtifactStagingDirectory)/publish'
+  aspireOutputPath: '$(Build.ArtifactStagingDirectory)/aspire-output'
   azureSubscription: 'XvsY'
   appServiceName: 'app-bigclubdebate-prod'
 
@@ -60,6 +62,18 @@ stages:
                 --output $(publishPath)
               zipAfterPublish: false
 
+          # Generate Aspire deployment manifests
+          - task: DotNetCoreCLI@2
+            displayName: 'Install Aspire CLI'
+            inputs:
+              command: 'custom'
+              custom: 'workload'
+              arguments: 'install aspire --skip-sign-check'
+
+          - script: |
+              aspire publish --project $(appHostProject) --output-path $(aspireOutputPath) --environment Production
+            displayName: 'Aspire Publish (generate deployment manifests)'
+
           - task: ArchiveFiles@2
             displayName: 'Zip publish output'
             inputs:
@@ -71,6 +85,10 @@ stages:
           - publish: '$(Build.ArtifactStagingDirectory)/deploy.zip'
             artifact: 'drop'
             displayName: 'Publish artifact'
+
+          - publish: '$(aspireOutputPath)'
+            artifact: 'aspire-manifests'
+            displayName: 'Publish Aspire manifests'
 
   # ── Deploy ──────────────────────────────────────────────────
   - stage: Deploy

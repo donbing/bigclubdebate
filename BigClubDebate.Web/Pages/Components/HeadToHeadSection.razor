@@ -4,13 +4,15 @@
 
 @inject LeagueGames LeagueData
 
-    <StatsSection SectionName="Head to Head" Expandable="false" Team1="Team1" Team2="Team2" Datesfilter="DatesFilter">
+    <StatsSection SectionName="Head to Head" Expandable="false" Team1="Team1" Team2="Team2" Datesfilter="Datesfilter">
         <GameResults Team1="Team1" Team2="Team2">
             <p>League Games</p>
         </GameResults>
     </StatsSection>
 
 @code {
+    public DatesFilter Datesfilter { get; set; } 
+    
     public TeamStats Team1 { get; set; }
     public TeamStats Team2 { get; set; }
 
@@ -22,13 +24,13 @@
     [Parameter]
     public TeamName Team2Name { get; set; }
 
-    [Parameter]
-    public DatesFilter DatesFilter { get; set; }
-
     protected override void OnParametersSet()
     {
         if (Team1Name != _oldTeam1Name || Team2Name != _oldTeam2Name)
         {
+            if (Datesfilter != null)
+                Datesfilter.Est2 = null;
+
             _oldTeam1Name = Team1Name;
             _oldTeam2Name = Team2Name;
         }
@@ -41,8 +43,9 @@
 
     void LoadGames()
     {
-        var games = LeagueData.HeadToHeadGames(Team1Name, Team2Name, DatesFilter?.Est1);
+        var games = LeagueData.HeadToHeadGames(Team1Name, Team2Name, Datesfilter?.Est1);
         (Team1, Team2) = (new TeamStats(Team1Name, games, null), new TeamStats(Team2Name, games, null));
+        Datesfilter = new DatesFilter(LoadGames, Team1.CompetitionStart, Team2.CompetitionStart);
         StateHasChanged();
     }
 }

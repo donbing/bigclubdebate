@@ -32,7 +32,7 @@
     void LoadGames()
     {
         var games = EuroData.GetChampionsLeagueGames(DatesFilter?.Est1);
-        var seasonsTables = EuroData.GetChampionsLeagueTables(games, DatesFilter?.Est1);
+        var seasonsTables = EuroData.GetChampionsLeagueTables(DatesFilter?.Est1);
         (Team1, Team2) = (new TeamStats(Team1Name, games, seasonsTables), new TeamStats(Team2Name, games, seasonsTables));
         StateHasChanged();
     }
