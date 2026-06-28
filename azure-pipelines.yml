@@ -1,7 +1,28 @@
 # Big Club Debate — CI/CD Pipeline
-# Builds .NET 10 Blazor Server app with Aspire orchestration, runs tests, deploys to Azure App Service (Linux)
+# Builds .NET 10 Blazor Server app with Aspire orchestration, runs tests,
+# deploys to Azure Container Apps via `aspire deploy`.
+#
+# Production URL: https://web.jollyplant-cd6dc099.westeurope.azurecontainerapps.io/
+#
+# Environments:
+#   - Staging (bigclubdebate-staging): automatic on master merge
+#   - Production (bigclubdebate-production): manual approval gate
+#
+# Azure DevOps: https://chrisbingham.visualstudio.com/XvsY
+#
+# One-time setup (already done — environments are created):
+#   .\scripts\Setup-AzureDevOpsEnvironments.ps1 -Organization "chrisbingham" -Project "XvsY"
+#
+# To enable manual approval on Production (recommended):
+#   1. Go to https://chrisbingham.visualstudio.com/XvsY/_settings/environments
+#   2. Open "bigclubdebate-production"
+#   3. Add → Approvals → add yourself as approver
 
 trigger:
+  - master
+
+# PR validation — runs Build & Test stage on every PR to master
+pr:
   - master
 
 pool:
@@ -10,12 +31,9 @@ pool:
 variables:
   buildConfiguration: 'Release'
   dotnetVersion: '10.x'
-  webProject: 'BigClubDebate.Web/BigClubDebate.Web.csproj'
-  appHostProject: 'BigClubDebate.AppHost/BigClubDebate.AppHost.csproj'
-  publishPath: '$(Build.ArtifactStagingDirectory)/publish'
-  aspireOutputPath: '$(Build.ArtifactStagingDirectory)/aspire-output'
+  solution: '**/*.sln'
+  appHostProject: 'BigClubDebate.AppHost'
   azureSubscription: 'XvsY'
-  appServiceName: 'app-bigclubdebate-prod'
 
 stages:
   # ── Build & Test ────────────────────────────────────────────
@@ -34,84 +52,92 @@ stages:
             displayName: 'Restore'
             inputs:
               command: 'restore'
-              projects: '**/*.sln'
+              projects: $(solution)
 
           - task: DotNetCoreCLI@2
             displayName: 'Build'
             inputs:
               command: 'build'
-              projects: '**/*.sln'
+              projects: $(solution)
               arguments: '--configuration $(buildConfiguration) --no-restore'
 
           - task: DotNetCoreCLI@2
-            displayName: 'Test'
+            displayName: 'Run tests'
             inputs:
               command: 'test'
-              projects: '**/*.sln'
+              projects: $(solution)
               arguments: '--configuration $(buildConfiguration) --no-build'
 
-          - task: DotNetCoreCLI@2
-            displayName: 'Publish (self-contained Linux)'
-            inputs:
-              command: 'publish'
-              projects: $(webProject)
-              arguments: >-
-                --configuration $(buildConfiguration)
-                --runtime linux-x64
-                --self-contained true
-                --output $(publishPath)
-              zipAfterPublish: false
-
-          # Generate Aspire deployment manifests
-          - task: DotNetCoreCLI@2
-            displayName: 'Install Aspire CLI'
-            inputs:
-              command: 'custom'
-              custom: 'workload'
-              arguments: 'install aspire --skip-sign-check'
-
-          - script: |
-              aspire publish --project $(appHostProject) --output-path $(aspireOutputPath) --environment Production
-            displayName: 'Aspire Publish (generate deployment manifests)'
-
-          - task: ArchiveFiles@2
-            displayName: 'Zip publish output'
-            inputs:
-              rootFolderOrFile: $(publishPath)
-              includeRootFolder: false
-              archiveType: 'zip'
-              archiveFile: '$(Build.ArtifactStagingDirectory)/deploy.zip'
-
-          - publish: '$(Build.ArtifactStagingDirectory)/deploy.zip'
-            artifact: 'drop'
-            displayName: 'Publish artifact'
-
-          - publish: '$(aspireOutputPath)'
-            artifact: 'aspire-manifests'
-            displayName: 'Publish Aspire manifests'
-
-  # ── Deploy ──────────────────────────────────────────────────
-  - stage: Deploy
-    displayName: 'Deploy to App Service'
+  # ── Deploy Staging ──────────────────────────────────────────
+  - stage: DeployStaging
+    displayName: 'Deploy to Staging (ACA)'
     dependsOn: Build
-    condition: succeeded()
+    condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
     jobs:
-      - deployment: DeployWeb
-        displayName: 'Deploy Web App'
-        environment: 'XvsY-prod'
+      - deployment: DeployStagingACA
+        displayName: 'Deploy to Staging ACA'
+        environment: 'bigclubdebate-staging'
         strategy:
           runOnce:
             deploy:
               steps:
+                - task: UseDotNet@2
+                  displayName: 'Install .NET SDK $(dotnetVersion)'
+                  inputs:
+                    version: $(dotnetVersion)
+
+                - task: DotNetCoreCLI@2
+                  displayName: 'Install Aspire workload'
+                  inputs:
+                    command: 'custom'
+                    custom: 'workload'
+                    arguments: 'install aspire --skip-sign-check'
+
                 - task: AzureCLI@2
-                  displayName: 'Deploy to App Service'
+                  displayName: 'Deploy to ACA (Staging)'
                   inputs:
                     azureSubscription: $(azureSubscription)
-                    scriptType: 'pscore'
+                    scriptType: 'bash'
                     scriptLocation: 'inlineScript'
                     inlineScript: |
-                      az webapp deploy `
-                        --name app-bigclubdebate-prod-7tu62mgi5mhu2 `
-                        --resource-group rg-bigclubdebate-prod `
-                        --type zip `
-                        --src-path $(Pipeline.Workspace)/drop/deploy.zip
+                      aspire deploy \
+                        --apphost $(appHostProject) \
+                        --environment Staging \
+                        --non-interactive
+
+  # ── Deploy Production ───────────────────────────────────────
+  - stage: DeployProduction
+    displayName: 'Deploy to Production (ACA)'
+    dependsOn: DeployStaging
+    condition: succeeded()
+    jobs:
+      - deployment: DeployProductionACA
+        displayName: 'Deploy to Production ACA'
+        environment: 'bigclubdebate-production'
+        strategy:
+          runOnce:
+            deploy:
+              steps:
+                - task: UseDotNet@2
+                  displayName: 'Install .NET SDK $(dotnetVersion)'
+                  inputs:
+                    version: $(dotnetVersion)
+
+                - task: DotNetCoreCLI@2
+                  displayName: 'Install Aspire workload'
+                  inputs:
+                    command: 'custom'
+                    custom: 'workload'
+                    arguments: 'install aspire --skip-sign-check'
+
+                - task: AzureCLI@2
+                  displayName: 'Deploy to ACA (Production)'
+                  inputs:
+                    azureSubscription: $(azureSubscription)
+                    scriptType: 'bash'
+                    scriptLocation: 'inlineScript'
+                    inlineScript: |
+                      aspire deploy \
+                        --apphost $(appHostProject) \
+                        --environment Production \
+                        --non-interactive
