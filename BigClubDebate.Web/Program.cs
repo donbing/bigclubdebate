@@ -3,8 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore;
-using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
@@ -15,14 +14,23 @@ namespace BigClubDebate.Web
     {
         public static void Main(string[] args)
         {
-            CreateHostBuilder(args).Build().Run();
-        }
+            var builder = WebApplication.CreateBuilder(args);
 
-        public static IHostBuilder CreateHostBuilder(string[] args) =>
-            Host.CreateDefaultBuilder(args)
-                .ConfigureWebHostDefaults(webBuilder =>
-                {
-                    webBuilder.UseStartup<Startup>();
-                });
+            // Use Startup for service configuration (keeps existing Startup logic intact)
+            var startup = new Startup(builder.Configuration, builder.Environment);
+            startup.ConfigureServices(builder.Services);
+
+            // Add Aspire service defaults (telemetry, health checks, service discovery, resilience)
+            builder.AddServiceDefaults();
+
+            var app = builder.Build();
+
+            // Map Aspire default endpoints (health checks) before the Startup pipeline
+            app.MapDefaultEndpoints();
+
+            startup.Configure(app, app.Environment);
+
+            app.Run();
+        }
     }
 }

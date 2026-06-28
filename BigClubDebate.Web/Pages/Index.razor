@@ -5,6 +5,7 @@
 @using BigClubDebate.Web.Data
 
 @inject WittyTagLineGenerator TagGenerator
+@inject Teams AllTeams
 @inject IJSRuntime JsRuntime
 
 @if (Team1 == null || Team2== null)
@@ -18,22 +19,28 @@ else
             <p>a statistics website to determine, once and for all who is the bigger club</p>
             <br />
             <h1>
-                <select id="team1Select" @bind="Team1Name">
-                    @foreach (var team in teams.ToList())
+                <select id="team1Select" value="@Team1Name" @onchange="OnTeam1NameChanged">
+                    @foreach (var team in AllTeams)
                     {
                         <option value="@team.MainName" disabled="@(Team2Name == team.MainName)">@team.NickName</option>
                     }
                 </select>
                 <span>VS</span>
-                <select id="team2Select" @bind="Team2Name">
-                    @foreach (var team in teams.ToList())
+                <select id="team2Select" value="@Team2Name" @onchange="OnTeam2NameChanged">
+                    @foreach (var team in AllTeams)
                     {
                         <option value="@team.MainName" disabled="@(Team1Name == team.MainName)">@team.NickName</option>
                     }
                 </select>
             </h1>
-            <img class="main-img team1" src="images/badges/@Team1.ImageName" alt="picture of shield" />
-            <img class="main-img team2" src="images/badges/@Team2.ImageName" alt="picture of shield" />
+            @if (Team1.HasImage)
+            {
+                <img class="main-img team1" src="images/badges/@Team1.ImageName" alt="@Team1.MainName badge" />
+            }
+            @if (Team2.HasImage)
+            {
+                <img class="main-img team2" src="images/badges/@Team2.ImageName" alt="@Team2.MainName badge" />
+            }
             <p class="tagline">@tagLine</p>
         </div>
     </section>
@@ -51,49 +58,45 @@ else
     public TeamName Team1 { get; set; }
     public TeamName Team2 { get; set; }
 
-    public string Team1Name
+    public string Team1Name => Team1?.MainName ?? AllTeams.SheffUtd.MainName;
+    public string Team2Name => Team2?.MainName ?? AllTeams.SheffWeds.MainName;
+
+    private async Task OnTeam1NameChanged(ChangeEventArgs e)
     {
-        get => Team1?.MainName ?? teams.SheffUtd.MainName;
-        set
+        var value = e.Value?.ToString();
+        if (Team1?.MainName != value)
         {
-            if (Team1.MainName != value)
-            {
-                Team1 = teams.SingleOrDefault(x => x.MainName == value);
-                LoadData();
-            }
+            Team1 = AllTeams.SingleOrDefault(x => x.MainName == value);
+            await LoadData();
         }
     }
 
-    public string Team2Name
+    private async Task OnTeam2NameChanged(ChangeEventArgs e)
     {
-        get => Team2?.MainName  ?? teams.SheffWeds.MainName;
-        set
+        var value = e.Value?.ToString();
+        if (Team2?.MainName != value)
         {
-            if (Team2?.MainName != value)
-            {
-                Team2 = teams.SingleOrDefault(x => x.MainName == value);
-                LoadData();
-            }
+            Team2 = AllTeams.SingleOrDefault(x => x.MainName == value);
+            await LoadData();
         }
     }
 
     string tagLine => TagGenerator.ForTeams(Team1, Team2);
 
-    private readonly Teams teams = new Teams();
-
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
         if (firstRender)
         {
-            Team1Name = (Team1 = teams.SheffUtd).MainName;
-            Team2Name = (Team2 = teams.SheffWeds).MainName;
+            Team1 = AllTeams.SheffUtd;
+            Team2 = AllTeams.SheffWeds;
+            await LoadData();
             StateHasChanged();
         }
     }
 
     async Task LoadData()
     {
-        await JsRuntime.InvokeVoidAsync("setbackground", Team1.BackGroundName);
+        await JsRuntime.InvokeVoidAsync("setbackground", Team1.BackGroundName ?? "stadium.jpg");
     }
 }
 

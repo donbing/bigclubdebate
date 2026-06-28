@@ -4,7 +4,7 @@
 @using BigClubDebate.Data.Model.DataSources
 @using BigClubDebate.Data.Model.DataTypes
 
-@if (false)
+@if (g == null)
 {
     <p><em>Loading...</em></p>
 }
@@ -30,12 +30,10 @@ else
     protected override void OnInitialized()
     {
         base.OnInitialized();
-        //data = LeagueData.DivisionTables(1);
         g = LeagueData.DivisionGames(1);
     }
 
-    IEnumerable<string> Years => g.Select(y => y.Season).Distinct();
-    ILookup<string, List<string>> data;
+    IEnumerable<string> Years => g?.Select(y => y.Season).Distinct() ?? Enumerable.Empty<string>();
     List<Game> g;
     public string Year { get; set; }
 

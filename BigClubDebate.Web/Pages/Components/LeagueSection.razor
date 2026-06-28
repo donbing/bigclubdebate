@@ -8,9 +8,9 @@
     <StatsSection SectionName="Division 1 / Premiership" Team1="Team1" Team2="Team2" Datesfilter="Datesfilter">
         <CompetitionResults Team1="Team1" Team2="Team2">
             @*<ul class="middle_opts">
-                <li><a title="Players" href="#playersModal"><img width="40px" src="images/player.png" /><div class="extraStats">foo</div></a></li>
-                <li><a title="League Positions"><img width="40px" src="images/graph.png" title="League Positions" /></a></li>
-                <li><a title="Transfers"><img width="40px" src="images/transfer.png" title="Transfers" /></a></li>
+                <li><a title="Players" href="#playersModal"><img width="40px" src="images/icons/player.png" /><div class="extraStats">foo</div></a></li>
+                <li><a title="League Positions"><img width="40px" src="images/icons/graph.png" title="League Positions" /></a></li>
+                <li><a title="Transfers"><img width="40px" src="images/icons/transfer.png" title="Transfers" /></a></li>
             </ul>*@
         </CompetitionResults>
         <GameResults Team1="Team1" Team2="Team2"></GameResults>
@@ -23,33 +23,25 @@
     public TeamStats Team1{ get; set; }
     public TeamStats Team2 { get; set; }
 
-    TeamName team1, team2;
-    [Parameter]
-    public TeamName Team1Name 
-    {
-        get => team1;
-        set
-        {
-            if(Datesfilter != null)
-                Datesfilter.Est2 = null;
-            team1 = value;
-        }
-    }
+    private TeamName _oldTeam1Name, _oldTeam2Name;
 
     [Parameter]
-    public TeamName Team2Name 
-    {
-        get => team2;
-        set
-        {
-            if(Datesfilter != null)
-                Datesfilter.Est2 = null;
-            team2 = value;
-        }
-    }
+    public TeamName Team1Name { get; set; }
+
+    [Parameter]
+    public TeamName Team2Name { get; set; }
     
     protected override void OnParametersSet()
     {
+        if (Team1Name != _oldTeam1Name || Team2Name != _oldTeam2Name)
+        {
+            if (Datesfilter != null)
+                Datesfilter.Est2 = null;
+
+            _oldTeam1Name = Team1Name;
+            _oldTeam2Name = Team2Name;
+        }
+
         LoadGames();
     }
 

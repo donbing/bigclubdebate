@@ -8,7 +8,7 @@ using BigClubDebate.Data.Model.DataTypes;
 
 namespace BigClubDebate.Data.Model.Reader
 {
-    public class FootyDataReader 
+    public class FootyDataReader : IGameDataProvider
     {
         readonly FootballDataFolderConfig _config;
         public readonly IList<CupGame> FaCupGames;
@@ -23,6 +23,11 @@ namespace BigClubDebate.Data.Model.Reader
             FaCupGames = ReadCupGames(config.FaCupFilePath);
         }
 
+        public IList<Season> GetLeagueSeasons() => LeagueSeasons;
+        public IList<CupGame> GetFaCupGames() => FaCupGames;
+        public IList<CupGame> GetLeagueCupGames() => LeagueCupGames;
+        public IList<Game> GetEuropeanCupGames() => new List<Game>();
+
         List<Season> ReadLeagueSeasons(string leagueDataParentFolder)
         {
             var older = File.ReadAllLines(_config.OlderLeagueCupFilePath)
@@ -33,13 +38,15 @@ namespace BigClubDebate.Data.Model.Reader
                 .ToLookup(g => g.Key, g => g.GroupBy(gg => gg.Division))
                 .Select(Thing)
                 .ToList();
-            return older.ToList();
+            
             // codre for parsing the better maintained league file... only goes back to 1991, old data goes to 1880
-            return Directory
+            var newer = Directory
                 .EnumerateDirectories(leagueDataParentFolder, "????-??", SearchOption.AllDirectories)
                 .Select(ReadFilesForYearFolder)
                 .OrderBy(x => x.Name)
                 .ToList();
+
+            return older.Concat(newer).ToList();
         }
 
         Season Thing(IGrouping<string, IEnumerable<IGrouping<string, Game>>> s)
@@ -165,12 +172,24 @@ namespace BigClubDebate.Data.Model.Reader
 
         static DateTime GuessGameDate(string season, string line)
         {
-            var dateLine = line.Replace("[", "").Replace("]", "") + "/";
-            return DateTime.TryParseExact(dateLine + season, "ddd MMM/d/yyyy", CultureInfo.CurrentCulture, DateTimeStyles.None, out var date1)
-                ? date1
-                : DateTime.TryParseExact(dateLine + (int.Parse(season) + 1), "ddd MMM/d/yyyy", CultureInfo.CurrentCulture, DateTimeStyles.None, out var date2)
-                    ? date2
-                    : throw new Exception("DT fail");
+            var datePart = line.Replace("[", "").Replace("]", "").Trim();
+            var dateLine = datePart + "/";
+            
+            if (DateTime.TryParseExact(dateLine + season, "ddd MMM/d/yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out var date1))
+                return date1;
+            
+            if (DateTime.TryParseExact(dateLine + (int.Parse(season) + 1), "ddd MMM/d/yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out var date2))
+                return date2;
+
+            // Fallback for formats without day of week or different separators
+            var cleanDate = datePart.Replace("/", " ").Trim();
+            if (DateTime.TryParse(cleanDate + " " + season, CultureInfo.InvariantCulture, DateTimeStyles.None, out var date3))
+                return date3;
+            
+            if (DateTime.TryParse(cleanDate + " " + (int.Parse(season) + 1), CultureInfo.InvariantCulture, DateTimeStyles.None, out var date4))
+                return date4;
+
+            throw new Exception($"DT fail: '{line}' in season '{season}'");
         }
 
         static Game ParseGameFrom(GroupCollection m, DateTime date, string season, string division)
