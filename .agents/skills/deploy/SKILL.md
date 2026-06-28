@@ -1,6 +1,25 @@
-# Deployment Guide
+---
+name: deploy
+description: "**PROJECT SKILL** — Deploy Big Club Debate to Azure Container Apps via Aspire CLI. WHEN: \"deploy\", \"publish\", \"go live\", \"ship it\", \"push to production\", \"deploy to Azure\", \"deploy big club debate\", \"deploy this app\", \"how do I deploy\". INVOKES: aspire CLI, Azure CLI, az CLI. FOR SINGLE OPERATIONS: run the deploy command directly."
+---
+
+# Deployment Guide — Big Club Debate
 
 The app deploys to **Azure Container Apps** via the Aspire CLI. Container-based deployment keeps costs low (~$5-6/mo on consumption tier).
+
+## Project-specific constants
+
+| Item | Value |
+|------|-------|
+| AppHost project | `BigClubDebate.AppHost` |
+| Container App name | `web` |
+| Resource group | `rg-aspire-bigclubdebateapphost` |
+| Target port | `8080` |
+| Deployment environment | `Production` |
+| Container App region config | `BigClubDebate.AppHost/appsettings.json` → `Azure:Location` (e.g. `westeurope`) |
+| Subscription config | `BigClubDebate.AppHost/appsettings.json` → `Azure:SubscriptionId` |
+
+> **Important:** The Aspire CLI looks for `Azure:SubscriptionId` and `Azure:Location` in the AppHost configuration. It does **not** use `azd` environment variables like `AZURE_SUBSCRIPTION_ID`.
 
 ## Prerequisites
 
@@ -32,11 +51,7 @@ Edit `BigClubDebate.AppHost/appsettings.json` and set your subscription ID and r
 }
 ```
 
-> **Why:** The Aspire CLI looks for `Azure:SubscriptionId` and `Azure:Location` in the AppHost configuration. It does NOT use `azd` environment variables like `AZURE_SUBSCRIPTION_ID`.
-
-### 2. Install Aspire hosting package
-
-This is already set up in the project. If you ever need to re-add it:
+### 2. Install Aspire hosting package (if not already present)
 
 ```powershell
 aspire add azure-appcontainers --apphost BigClubDebate.AppHost
@@ -44,8 +59,9 @@ aspire add azure-appcontainers --apphost BigClubDebate.AppHost
 
 ## Deploy
 
+From the solution root:
+
 ```powershell
-# From the solution root
 aspire deploy --apphost BigClubDebate.AppHost --environment Production --non-interactive
 ```
 
@@ -56,11 +72,11 @@ aspire deploy --apphost BigClubDebate.AppHost --environment Production --non-int
 4. Provisions/updates the Container Apps environment + Container App
 5. Deploys the new container revision
 
-This takes ~2-3 minutes. Look for `✅ Pipeline succeeded` at the end.
+Takes ~2-3 minutes. Look for `✅ Pipeline succeeded` at the end.
 
 ### If switching deployment targets
 
-If you previously deployed to App Service or Docker, clear the cache:
+Clear the cache if you previously deployed to App Service or Docker:
 
 ```powershell
 aspire deploy --apphost BigClubDebate.AppHost --environment Production --clear-cache --non-interactive
@@ -107,7 +123,7 @@ The Container App scales to zero when idle and spins up on the first request (~3
 
 ### `An Azure subscription id is required`
 
-The `Azure:SubscriptionId` setting is missing from `BigClubDebate.AppHost/appsettings.json`. Add it (see step 1 above).
+The `Azure:SubscriptionId` setting is missing from `BigClubDebate.AppHost/appsettings.json`. Add it.
 
 ### `Docker is not running`
 
@@ -116,17 +132,18 @@ Start Docker Desktop. The Aspire deploy pipeline containerizes your app and need
 ### `service host 'aspire' is unsupported`
 
 Your `azd` version is too old. Update:
+
 ```powershell
 powershell -ex AllSigned -c "Invoke-RestMethod 'https://aka.ms/install-azd.ps1' | Invoke-Expression"
 ```
 
 ### `No public endpoints` after deploy
 
-Run the `az containerapp ingress enable` command from step "After first deploy" above.
+Run the `az containerapp ingress enable` command from "After first deploy" above.
 
 ### Site shows blank page or "Loading..." forever
 
-This is normal for a cold start. The consumption tier scales to zero when idle. First request triggers a cold start (~30s), then Blazor Server establishes its SignalR connection. Refresh if it takes longer than a minute.
+Normal for a cold start — consumption tier scales to zero when idle. First request triggers a cold start (~30s), then Blazor Server establishes its SignalR connection. Refresh if it takes longer than a minute.
 
 ## Local development
 
