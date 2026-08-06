@@ -33,3 +33,6 @@ This codebase is a Blazor Server application that analyzes historical football d
 ## Documentation
 - [README.md](./readme.md) - Project overview.
 - [NOTES.md](./BigClubDebate.Web/GameData/england-master/NOTES.md) - Details on source data formatting.
+
+## notes
+/dev/null does not exist on windows

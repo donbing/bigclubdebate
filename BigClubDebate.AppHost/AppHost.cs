@@ -1,6 +1,9 @@
 var builder = DistributedApplication.CreateBuilder(args);
 
-builder.AddAzureContainerAppEnvironment("env");
+if (builder.ExecutionContext.IsPublishMode)
+{
+    builder.AddAzureContainerAppEnvironment("env");
+}
 
 var web = builder.AddProject<Projects.BigClubDebate_Web>("web")
     .WithExternalHttpEndpoints();

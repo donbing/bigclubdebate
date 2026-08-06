@@ -10,7 +10,6 @@ using Xunit;
 namespace BigClubDebate.Tests;
 
 /// <summary>
-/// C# port of the count_unique_teams.py and count_normalized_teams.py scripts.
 /// These tests verify that we can gather unique team names from all data sources
 /// and that normalization reduces name variance.
 /// </summary>
@@ -19,7 +18,6 @@ public class TeamCountTests
     [Fact]
     public void CountUniqueTeamsFromAllSources()
     {
-        // Port of count_unique_teams.py — gathers unique team names from every source
         // and verifies cumulative counts are sensible.
         var (config, reader, champsReader, transfermarktReader) = CreateReaders();
 
@@ -91,7 +89,6 @@ public class TeamCountTests
     [Fact]
     public void CountNormalizedTeamsAllSources()
     {
-        // Port of count_normalized_teams.py — compares raw and normalized team name counts.
         // The C# readers (ChampsCsvReader, TransfermarktCsvReader) already normalize during
         // parsing, so the league and cup names are the "raw" baseline, and European source
         // names come through already normalized.
